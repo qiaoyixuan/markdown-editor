@@ -6,35 +6,36 @@ import $ from 'jquery'
 
 var md          = require('markdown-it')(),
     mdContainer = require('markdown-it-container');
-var view_map, view_height = [];
+var block_height, view_height = [];
 md.core.ruler.at('replacements', function replace(state) {
-    view_map = [];
+    block_height = [];
     var tokens = state.tokens, n = 0, tmp_tokens = [];
-    var divs = $('.block_text').children(), height = [], h = 0,
-        _divs = $('.view')[0].children, _h = 0;
-    console.log(divs, _divs)
+    var divs = $('.block_text').children(), edit_height = [], h = 0,
+        _divs = $('.view');
+    // console.log(divs, _divs.children())
 
     $(divs).each(function(idx, div){
-        height.push(h);
+        edit_height.push(h);
         h += $(div).height();
     })
-    for (var i = 0; i < _divs.length; i++) {
-        // console.log(_divs[i])
-        view_height.push(_h);
-        _h += _divs[i].clientHeight;
-    };
-    console.log(height, view_height)
+    // h = 0;
+    // for (var i = 0; i < _divs.length; i++) {
+    //     // console.log(_divs[i])
+    //     view_height.push(h);
+    //     h += _divs[i].clientHeight;
+    // };
+    // console.log(edit_height.length)
+
     for (var i = 0; i < tokens.length; i++) {
         tmp_tokens.push(tokens[i]);
         n += tokens[i].nesting;
         if(n == 0){
             var map_0 = tmp_tokens[0].map[0];
-            // console.log(divs[map_0], $(divs[map_0]))
-            view_map.push(height[map_0])
+            block_height.push(edit_height[map_0])
             tmp_tokens = [];
         }
     };
-    // console.log('view_map', view_map)
+    // console.log(block_height.length)
 });
 
 var initial_state = {
@@ -100,15 +101,14 @@ var Edit = React.createClass({
         var edit = ReactDOM.findDOMNode(this.refs.edit),
             children = $('.view')[0].children;
         edit.addEventListener('scroll', function(){
-            for (var i = 0; i < view_map.length - 1; i++) {
-                if(this.scrollTop > view_map[i] && this.scrollTop < view_map[i + 1])
-                    // $('.container').animate({
-                    //     scrollTop: view_map[i]
-                    // }, 0)
-                    // var per = (this.scrollTop - view_map[i]) / (view_map[i + 1] - view_map[i]);
-                    // console.log(per)
-                    // if(per)
-                    $('.container').scrollTop(children[i].offsetTop);
+            for (var i = 0; i < block_height.length - 1; i++) {
+                if(this.scrollTop > block_height[i] && this.scrollTop < block_height[i + 1]){
+                    var per = (this.scrollTop - block_height[i]) / (block_height[i + 1] - block_height[i]);
+                    if(per){
+                        var offset = (view_height[i + 1] - view_height[i]) * per + view_height[i];
+                        $('.container').scrollTop(offset);
+                    }
+                }
             };
         });
     },
@@ -117,7 +117,7 @@ var Edit = React.createClass({
         var blocks = this.props.status.block_text.map(function(block, i){
             return (<Block block_id={block.id} key={i} editing={self.props.editing}>{block.text}</Block>)
         })
-		return (<div className='edit' ref='edit' style={{height:this.props.status.edit_style.height+'px'}}>
+		return (<div className='edit' ref='edit' style={{height:this.props.status.edit_style.height + 'px'}}>
                     {blocks}
 				</div>)
 	}
@@ -138,6 +138,14 @@ var Block = React.createClass({
 })
 
 var View = React.createClass({
+    componentDidUpdate: function(){
+        var children = $(ReactDOM.findDOMNode(this.refs.view))[0].children, h = 0;
+        $(children).each(function(idx, child){
+            view_height.push(h);
+            h += $(child).height();
+        })
+        console.log('view_height', view_height.length)
+    },
 	render: function(){
 		return (<div className='container' style={{height:this.props.status.view_style.height+'px'}}>
                     <div className='view' ref='view' dangerouslySetInnerHTML={{ __html: this.props.view_text }}></div>

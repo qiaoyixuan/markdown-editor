@@ -38055,41 +38055,41 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 var md = require('markdown-it')(),
     mdContainer = require('markdown-it-container');
-var view_map,
+var block_height,
     view_height = [];
 md.core.ruler.at('replacements', function replace(state) {
-    view_map = [];
+    block_height = [];
     var tokens = state.tokens,
         n = 0,
         tmp_tokens = [];
     var divs = (0, _jquery2['default'])('.block_text').children(),
-        height = [],
+        edit_height = [],
         h = 0,
-        _divs = (0, _jquery2['default'])('.view')[0].children,
-        _h = 0;
-    console.log(divs, _divs);
+        _divs = (0, _jquery2['default'])('.view');
+    // console.log(divs, _divs.children())
 
     (0, _jquery2['default'])(divs).each(function (idx, div) {
-        height.push(h);
+        edit_height.push(h);
         h += (0, _jquery2['default'])(div).height();
     });
-    for (var i = 0; i < _divs.length; i++) {
-        // console.log(_divs[i])
-        view_height.push(_h);
-        _h += _divs[i].clientHeight;
-    };
-    console.log(height, view_height);
+    // h = 0;
+    // for (var i = 0; i < _divs.length; i++) {
+    //     // console.log(_divs[i])
+    //     view_height.push(h);
+    //     h += _divs[i].clientHeight;
+    // };
+    // console.log(edit_height.length)
+
     for (var i = 0; i < tokens.length; i++) {
         tmp_tokens.push(tokens[i]);
         n += tokens[i].nesting;
         if (n == 0) {
             var map_0 = tmp_tokens[0].map[0];
-            // console.log(divs[map_0], $(divs[map_0]))
-            view_map.push(height[map_0]);
+            block_height.push(edit_height[map_0]);
             tmp_tokens = [];
         }
     };
-    // console.log('view_map', view_map)
+    // console.log(block_height.length)
 });
 
 var initial_state = {
@@ -38172,15 +38172,14 @@ var Edit = _react2['default'].createClass({
         var edit = _reactDom2['default'].findDOMNode(this.refs.edit),
             children = (0, _jquery2['default'])('.view')[0].children;
         edit.addEventListener('scroll', function () {
-            for (var i = 0; i < view_map.length - 1; i++) {
-                if (this.scrollTop > view_map[i] && this.scrollTop < view_map[i + 1])
-                    // $('.container').animate({
-                    //     scrollTop: view_map[i]
-                    // }, 0)
-                    // var per = (this.scrollTop - view_map[i]) / (view_map[i + 1] - view_map[i]);
-                    // console.log(per)
-                    // if(per)
-                    (0, _jquery2['default'])('.container').scrollTop(children[i].offsetTop);
+            for (var i = 0; i < block_height.length - 1; i++) {
+                if (this.scrollTop > block_height[i] && this.scrollTop < block_height[i + 1]) {
+                    var per = (this.scrollTop - block_height[i]) / (block_height[i + 1] - block_height[i]);
+                    if (per) {
+                        var offset = (view_height[i + 1] - view_height[i]) * per + view_height[i];
+                        (0, _jquery2['default'])('.container').scrollTop(offset);
+                    }
+                }
             };
         });
     },
@@ -38222,6 +38221,15 @@ var Block = _react2['default'].createClass({
 var View = _react2['default'].createClass({
     displayName: 'View',
 
+    componentDidUpdate: function componentDidUpdate() {
+        var children = (0, _jquery2['default'])(_reactDom2['default'].findDOMNode(this.refs.view))[0].children,
+            h = 0;
+        (0, _jquery2['default'])(children).each(function (idx, child) {
+            view_height.push(h);
+            h += (0, _jquery2['default'])(child).height();
+        });
+        console.log('view_height', view_height.length);
+    },
     render: function render() {
         return _react2['default'].createElement(
             'div',
