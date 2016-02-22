@@ -1,0 +1,32 @@
+{
+  "name": "SawyerBlog",
+  "version": "0.0.1",
+  "author": "Sawyer",
+  "scripts": {
+    "start": "watchify --extension=js -o dist/bundle.js static/index.js"
+  },
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  },
+  "devDependencies": {
+    "babel-loader": "^6.2.2",
+    "babelify": "~6.1.2",
+    "browser": "^0.2.6",
+    "browserify": "~10.2.4",
+    "jquery": "^2.2.0",
+    "json-loader": "^0.5.4",
+    "markdown-it": "~5.1.0",
+    "markdown-it-container": "^2.0.0",
+    "promise": "^7.1.1",
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7",
+    "react-hot-loader": "^1.3.0",
+    "react-redux": "^4.4.0",
+    "redux": "^3.3.1",
+    "watchify": "^3.3.1",
+    "webpack": "^1.12.13",
+    "webpack-dev-server": "^1.14.1"
+  }
+}

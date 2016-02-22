@@ -1,0 +1,54 @@
+@charset 'utf-8';
+*{
+	margin: 0;
+	padding: 0;
+}
+
+.editer{
+	width: 100%;
+}
+
+.edit, .container{
+	width: 47%;
+	overflow-y: auto; 
+}
+
+.options{
+	box-shadow: 0 0 5px #bbb;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.insert{
+
+}
+
+.edit{
+	float: left;
+	margin-left: 2%;
+}
+
+.container{
+    float: right;
+    margin-right: 2%;
+    overflow-x: hidden;
+}
+.view{
+    padding: 10px;
+    font-size: 16px;
+    line-height: 27px;
+    border: 1px dashed #BBB;
+    margin-bottom: 10px;
+}
+
+.block{
+    border: 1px dashed #BBB;
+    margin-bottom: 10px;
+}
+
+.block_text{
+	padding: 10px;
+	outline: none;    
+	font-size: 16px;
+    line-height: 27px;
+}
