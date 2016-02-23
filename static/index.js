@@ -134,7 +134,8 @@ var Block = React.createClass({
 
 var View = React.createClass({
     componentDidUpdate: function(){
-        var children = $(ReactDOM.findDOMNode(this.refs.view))[0].children, h = 0;
+        var children = $(this.refs.view).children(), h = 0;
+        console.log('children', children)
         view_height = [];
         $(children).each(function(idx, child){
             view_height.push(h);

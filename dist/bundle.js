@@ -38217,8 +38217,9 @@ var View = _react2['default'].createClass({
     displayName: 'View',
 
     componentDidUpdate: function componentDidUpdate() {
-        var children = (0, _jquery2['default'])(_reactDom2['default'].findDOMNode(this.refs.view))[0].children,
+        var children = (0, _jquery2['default'])(this.refs.view).children(),
             h = 0;
+        console.log('children', children);
         view_height = [];
         (0, _jquery2['default'])(children).each(function (idx, child) {
             view_height.push(h);
