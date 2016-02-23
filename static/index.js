@@ -4,8 +4,8 @@ import { createStore } from 'redux'
 import { Provider, connect } from 'react-redux'
 import $ from 'jquery'
 
-var md          = require('markdown-it')(),
-    mdContainer = require('markdown-it-container');
+var md          = require('guide-markdown')();
+    // mdContainer = require('markdown-it-container');
 var token_height, view_height = [];
 md.core.ruler.at('replacements', function replace(state) {
     token_height = [];
