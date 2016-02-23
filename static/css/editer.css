@@ -26,24 +26,24 @@
 .edit{
 	float: left;
 	margin-left: 2%;
+    border: 1px dashed #BBB;
 }
 
 .container{
     float: right;
     margin-right: 2%;
     overflow-x: hidden;
+    border: 1px dashed #BBB;
 }
 .view{
     padding: 10px;
     font-size: 16px;
     line-height: 27px;
-    border: 1px dashed #BBB;
     margin-bottom: 10px;
 }
 
 .block{
-    border: 1px dashed #BBB;
-    margin-bottom: 10px;
+    border-bottom: 1px dashed #BBB;
 }
 
 .block_text{

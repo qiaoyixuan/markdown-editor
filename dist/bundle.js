@@ -38055,41 +38055,36 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 var md = require('markdown-it')(),
     mdContainer = require('markdown-it-container');
-var block_height,
+var token_height,
     view_height = [];
 md.core.ruler.at('replacements', function replace(state) {
-    block_height = [];
+    token_height = [];
     var tokens = state.tokens,
         n = 0,
-        tmp_tokens = [];
-    var divs = (0, _jquery2['default'])('.block_text').children(),
+        tmp_tokens = [],
+        divs = (0, _jquery2['default'])('.block_text').children(),
         edit_height = [],
-        h = 0,
-        _divs = (0, _jquery2['default'])('.view');
-    // console.log(divs, _divs.children())
+        h = 0;
+
+    console.log(divs);
 
     (0, _jquery2['default'])(divs).each(function (idx, div) {
         edit_height.push(h);
         h += (0, _jquery2['default'])(div).height();
     });
-    // h = 0;
-    // for (var i = 0; i < _divs.length; i++) {
-    //     // console.log(_divs[i])
-    //     view_height.push(h);
-    //     h += _divs[i].clientHeight;
-    // };
-    // console.log(edit_height.length)
 
     for (var i = 0; i < tokens.length; i++) {
         tmp_tokens.push(tokens[i]);
         n += tokens[i].nesting;
         if (n == 0) {
             var map_0 = tmp_tokens[0].map[0];
-            block_height.push(edit_height[map_0]);
+            token_height.push(edit_height[map_0]);
             tmp_tokens = [];
         }
     };
-    // console.log(block_height.length)
+
+    console.log('edit_height', edit_height);
+    console.log('token_height', token_height);
 });
 
 var initial_state = {
@@ -38172,9 +38167,9 @@ var Edit = _react2['default'].createClass({
         var edit = _reactDom2['default'].findDOMNode(this.refs.edit),
             children = (0, _jquery2['default'])('.view')[0].children;
         edit.addEventListener('scroll', function () {
-            for (var i = 0; i < block_height.length - 1; i++) {
-                if (this.scrollTop > block_height[i] && this.scrollTop < block_height[i + 1]) {
-                    var per = (this.scrollTop - block_height[i]) / (block_height[i + 1] - block_height[i]);
+            for (var i = 0; i < token_height.length - 1; i++) {
+                if (this.scrollTop > token_height[i] && this.scrollTop < token_height[i + 1]) {
+                    var per = (this.scrollTop - token_height[i]) / (token_height[i + 1] - token_height[i]);
                     if (per) {
                         var offset = (view_height[i + 1] - view_height[i]) * per + view_height[i];
                         (0, _jquery2['default'])('.container').scrollTop(offset);
@@ -38224,11 +38219,12 @@ var View = _react2['default'].createClass({
     componentDidUpdate: function componentDidUpdate() {
         var children = (0, _jquery2['default'])(_reactDom2['default'].findDOMNode(this.refs.view))[0].children,
             h = 0;
+        view_height = [];
         (0, _jquery2['default'])(children).each(function (idx, child) {
             view_height.push(h);
             h += (0, _jquery2['default'])(child).height();
         });
-        console.log('view_height', view_height.length);
+        console.log('view_height', view_height);
     },
     render: function render() {
         return _react2['default'].createElement(
