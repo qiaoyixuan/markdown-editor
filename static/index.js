@@ -7,12 +7,13 @@ import $ from 'jquery'
 var md          = require('guide-markdown')();
     // mdContainer = require('markdown-it-container');
 var token_height, view_height = [];
+
 md.core.ruler.at('replacements', function replace(state) {
     token_height = [];
     var tokens = state.tokens, n = 0, tmp_tokens = [],
     divs = $('.block_text').children(), edit_height = [], h = 0;
 
-    console.log(divs)
+    // console.log(divs)
 
     $(divs).each(function(idx, div){ 
         edit_height.push(h);
@@ -29,8 +30,8 @@ md.core.ruler.at('replacements', function replace(state) {
         }
     };
 
-    console.log('edit_height', edit_height);
-    console.log('token_height', token_height);
+    // console.log('edit_height', edit_height);
+    // console.log('token_height', token_height);
 });
 
 var initial_state = {
@@ -135,13 +136,13 @@ var Block = React.createClass({
 var View = React.createClass({
     componentDidUpdate: function(){
         var children = $(this.refs.view).children(), h = 0;
-        console.log('children', children)
+        // console.log('children', children)
         view_height = [];
         $(children).each(function(idx, child){
             view_height.push(h);
             h += $(child).height();
         })
-        console.log('view_height', view_height)
+        // console.log('view_height', view_height)
     },
 	render: function(){
 		return (<div className='container' style={{height:this.props.status.view_style.height+'px'}}>

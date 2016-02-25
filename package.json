@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "author": "Sawyer",
   "scripts": {
+    "dev": "webpack-dev-server --hot --config webpack.config.js",
     "start": "watchify --extension=js -o dist/bundle.js static/index.js"
   },
   "browserify": {
