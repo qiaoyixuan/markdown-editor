@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "fa1577f6cc3c21e2b3c4"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "3536ae1afd7383962ff8"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -565,7 +565,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "fa1577f6cc3c21e2b3c4"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "3536ae1afd7383962ff8"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -8424,48 +8424,20 @@
 
 	        var _jquery2 = _interopRequireDefault(_jquery);
 
-	        var md = __webpack_require__(266)();
-	        // mdContainer = require('markdown-it-container');
-	        var token_height,
-	            view_height = [];
-
-	        md.core.ruler.at('replacements', function replace(state) {
-	            token_height = [];
-	            var tokens = state.tokens,
-	                n = 0,
-	                tmp_tokens = [],
-	                divs = (0, _jquery2['default'])('.block_text').children(),
-	                edit_height = [],
-	                h = 0;
-
-	            // console.log(divs)
-
-	            (0, _jquery2['default'])(divs).each(function (idx, div) {
-	                edit_height.push(h);
-	                h += (0, _jquery2['default'])(div).height();
-	            });
-
-	            for (var i = 0; i < tokens.length; i++) {
-	                tmp_tokens.push(tokens[i]);
-	                n += tokens[i].nesting;
-	                if (n == 0) {
-	                    var map_0 = tmp_tokens[0].map[0];
-	                    token_height.push(edit_height[map_0]);
-	                    tmp_tokens = [];
-	                }
-	            };
-
-	            // console.log('edit_height', edit_height);
-	            // console.log('token_height', token_height);
-	        });
+	        var md = __webpack_require__(266)(),
+	            mdContainer = __webpack_require__(334);
 
 	        var initial_state = {
-	            block_num: 0,
-	            block_text: [{
-	                id: 0,
-	                text: ''
+	            section_num: 1,
+	            token_offsetY: [],
+	            preview_offsetY: [],
+	            view_html: '',
+	            sections: [{
+	                section_id: 0,
+	                md_text: '',
+	                section_div_height: [0],
+	                section_tokens: []
 	            }],
-	            view_text: '',
 	            editer_style: {
 	                height: window.innerHeight
 	            },
@@ -8477,44 +8449,32 @@
 	            }
 	        };
 
-	        function stateUtil(state, action) {
-	            if (state === undefined) state = initial_state;
+	        var Editor = _react2['default'].createClass({
+	            displayName: 'Editor',
 
-	            var ns = Object.assign({}, state);
-	            switch (action.type) {
-	                case 'insert_block':
-	                    ns.block_text.push({ id: ++ns.block_num, text: '' });
-	                    return ns;
-	                case 'editing':
-	                    ns.block_text[action.data.block_id].text = action.data.block_text;
-	                    var text = ns.block_text.reduce(function (prev, cur) {
-	                        return prev += cur.text;
-	                    }, '');
-	                    ns.view_text = md.render(text);
-	                    return ns;
-	                case 'handleResize':
-	                    ns.editer_style.height = window.innerHeight;
-	                    ns.edit_style.height = ns.view_style.height = window.innerHeight - 50;
-	                    return ns;
-	                default:
-	                    return ns;
-	            }
-	        }
-
-	        var Editer = _react2['default'].createClass({
-	            displayName: 'Editer',
-
+	            propTypes: {
+	                status: _react.PropTypes.object,
+	                onInsert: _react.PropTypes.func,
+	                onResize: _react.PropTypes.func,
+	                onPreviewUpdate: _react.PropTypes.func
+	            },
 	            componentDidMount: function componentDidMount() {
-	                window.addEventListener('resize', this.props.handleResize);
+	                window.addEventListener('resize', this.props.onResize);
 	            },
 	            render: function render() {
 	                var _props = this.props;
 	                var status = _props.status;
-	                var insert_block = _props.insert_block;
-	                var editing = _props.editing;
-	                var handleResize = _props.handleResize;
+	                var onInsert = _props.onInsert;
+	                var onEdit = _props.onEdit;
+	                var onResize = _props.onResize;
+	                var onPreviewUpdate = _props.onPreviewUpdate;
 
-	                return _react2['default'].createElement('div', { className: 'editer', style: { height: status.editer_style.height + 'px' } }, _react2['default'].createElement('div', { className: 'options' }, _react2['default'].createElement('button', { className: 'insert', onClick: insert_block }, 'newBlock')), _react2['default'].createElement(Edit, { status: status, editing: editing }), _react2['default'].createElement(View, { status: status, view_text: status.view_text }));
+	                return _react2['default'].createElement('div', { className: 'editor', style: { height: status.editer_style.height + 'px' } }, _react2['default'].createElement('div', { className: 'options' }, _react2['default'].createElement('button', { className: 'insert', onClick: onInsert }, 'newBlock')), _react2['default'].createElement(Edit, {
+	                    status: status,
+	                    onEdit: onEdit }), _react2['default'].createElement(View, {
+	                    onPreviewUpdate: onPreviewUpdate,
+	                    view_style: status.view_style,
+	                    view_html: status.view_html }));
 	            }
 	        });
 
@@ -8522,24 +8482,24 @@
 	            displayName: 'Edit',
 
 	            componentDidMount: function componentDidMount() {
-	                var edit = _reactDom2['default'].findDOMNode(this.refs.edit),
-	                    children = (0, _jquery2['default'])('.view')[0].children;
-	                edit.addEventListener('scroll', function () {
-	                    for (var i = 0; i < token_height.length - 1; i++) {
-	                        if (this.scrollTop > token_height[i] && this.scrollTop < token_height[i + 1]) {
-	                            var per = (this.scrollTop - token_height[i]) / (token_height[i + 1] - token_height[i]);
-	                            if (per) {
-	                                var offset = (view_height[i + 1] - view_height[i]) * per + view_height[i];
-	                                (0, _jquery2['default'])('.container').scrollTop(offset);
-	                            }
-	                        }
-	                    };
-	                });
+	                var edit = this.refs.edit,
+	                    children = (0, _jquery2['default'])('.view').children();
+	                // edit.addEventListener('scroll', function(){
+	                //     for (var i = 0; i < token_offsetY.length - 1; i++) {
+	                //         if(this.scrollTop > token_offsetY[i] && this.scrollTop < token_offsetY[i + 1]){
+	                //             var per = (this.scrollTop - token_offsetY[i]) / (token_offsetY[i + 1] - token_offsetY[i]);
+	                //             if(per){
+	                //                 var offset = (preview_offsetY[i + 1] - preview_offsetY[i]) * per + preview_offsetY[i];
+	                //                 $('.container').scrollTop(offset);
+	                //             }
+	                //         }
+	                //     };
+	                // });
 	            },
 	            render: function render() {
 	                var self = this;
-	                var blocks = this.props.status.block_text.map(function (block, i) {
-	                    return _react2['default'].createElement(Block, { block_id: block.id, key: i, editing: self.props.editing }, block.text);
+	                var blocks = this.props.status.sections.map(function (section, i) {
+	                    return _react2['default'].createElement(Block, { section: section, key: i, onEdit: self.props.onEdit }, section.md_text);
 	                });
 	                return _react2['default'].createElement('div', { className: 'edit', ref: 'edit', style: { height: this.props.status.edit_style.height + 'px' } }, blocks);
 	            }
@@ -8550,63 +8510,113 @@
 
 	            render: function render() {
 	                var self = this;
-	                function getVal(fn) {
+	                var onInput = function onInput() {
 	                    return function () {
-	                        fn(self.refs.textarea.getAttribute('data-block_id'), self.refs.textarea.innerText);
+	                        var section = self.refs.section,
+	                            section_div_height = [];
+	                        // token_offsetY  = [];
+	                        // var tokens     = md.parse(this.refs.section.innerText, {}),
+	                        // n              = 0,
+	                        // h              = 0,
+	                        // tmp_tokens     = [],
+	                        // divs_offsetY   = [],
+	                        // divs           = $(this.refs.section).children();
+	                        // $(divs).each(function(idx, div){
+	                        //     divs_offsetY.push(h);
+	                        //     h += $(div).height();
+	                        // });
+
+	                        // for (var i = 0; i < tokens.length; i++) {
+	                        //     tmp_tokens.push(tokens[i]);
+	                        //     n += tokens[i].nesting;
+	                        //     if(n == 0){
+	                        //         var map_0 = tmp_tokens[0].map[0];
+	                        //         token_offsetY.push(divs_offsetY[map_0]);
+	                        //         tmp_tokens = [];
+	                        //     }
+	                        // };
+	                        (0, _jquery2['default'])(section).children().each(function () {
+	                            section_div_height.push((0, _jquery2['default'])(this).height());
+	                        });
+	                        self.props.onEdit({
+	                            section_id: self.props.section.section_id,
+	                            md_text: section.innerText,
+	                            section_div_height: section_div_height,
+	                            section_tokens: md.parse(section.innerText, {})
+	                        });
 	                    };
-	                }
-	                return _react2['default'].createElement('div', { className: 'block' }, _react2['default'].createElement('div', { className: 'block_edit', ref: 'textarea', contentEditable: true, 'data-block_id': this.props.block_id, onInput: getVal(this.props.editing), className: 'block_text' }));
+	                };
+	                return _react2['default'].createElement('div', { className: 'section-warpper' }, _react2['default'].createElement('div', { className: 'section', ref: 'section', contentEditable: true, onInput: onInput() }));
 	            }
 	        });
 
 	        var View = _react2['default'].createClass({
 	            displayName: 'View',
 
-	            componentDidUpdate: function componentDidUpdate() {
+	            update: function update() {
+	                var self = this;
 	                var children = (0, _jquery2['default'])(this.refs.view).children(),
-	                    h = 0;
-	                // console.log('children', children)
-	                view_height = [];
+	                    h = 0,
+	                    preview_offsetY = [];
 	                (0, _jquery2['default'])(children).each(function (idx, child) {
-	                    view_height.push(h);
+	                    preview_offsetY.push(h);
 	                    h += (0, _jquery2['default'])(child).height();
 	                });
-	                // console.log('view_height', view_height)
+	                return preview_offsetY;
+	            },
+	            componentDidMount: function componentDidMount() {
+	                var self = this;
+	                setInterval(function () {
+	                    self.props.onPreviewUpdate(self.update());
+	                }, 2500);
 	            },
 	            render: function render() {
-	                return _react2['default'].createElement('div', { className: 'container', style: { height: this.props.status.view_style.height + 'px' } }, _react2['default'].createElement('div', { className: 'view', ref: 'view', dangerouslySetInnerHTML: { __html: this.props.view_text } }));
+	                return _react2['default'].createElement('div', { className: 'container', style: { height: this.props.view_style.height + 'px' } }, _react2['default'].createElement('div', { className: 'view', ref: 'view', dangerouslySetInnerHTML: { __html: this.props.view_html } }));
 	            }
 	        });
 
 	        function handleChange() {
-	            ///console.log('Current state:', store.getState());
+	            console.log('Current state:', store.getState());
 	        }
 
 	        var store = (0, _redux.createStore)(stateUtil),
 	            unsubscribe = store.subscribe(handleChange);
 
-	        Editer.propTypes = {
-	            status: _react.PropTypes.object,
-	            insert_block: _react.PropTypes.func,
-	            handleResize: _react.PropTypes.func
-	        };
+	        function stateUtil(state, action) {
+	            if (state === undefined) state = initial_state;
 
-	        /* actions */
-	        var _insert_block = {
-	            type: 'insert_block'
-	        },
-	            _editing = {
-	            type: 'editing',
-	            data: {
-	                block_id: null,
-	                block_text: null
+	            var ns = Object.assign({}, state);
+	            switch (action.type) {
+	                case 'onInsert':
+	                    ns.sections.push({
+	                        section_id: ns.section_num++,
+	                        md_text: '',
+	                        section_div_height: [0],
+	                        section_tokens: []
+	                    });
+	                    return ns;
+	                case 'onEdit':
+	                    var section = ns.sections[action.data.section_id];
+	                    section.md_text = action.data.md_text;
+	                    section.section_div_height = action.data.section_div_height;
+	                    section.section_tokens = action.data.section_tokens;
+	                    var md_text = ns.sections.reduce(function (prev, cur) {
+	                        return prev += cur.md_text;
+	                    }, '');
+	                    ns.view_html = md.render(md_text);
+	                    return ns;
+	                case 'onResize':
+	                    ns.editer_style.height = window.innerHeight;
+	                    ns.edit_style.height = ns.view_style.height = window.innerHeight - 50;
+	                    return ns;
+	                case 'onPreviewUpdate':
+	                    ns.preview_offsetY = action.data.preview_offsetY;
+	                    return ns;
+	                default:
+	                    return ns;
 	            }
-	        },
-	            _handleResize = {
-	            type: 'handleResize'
-	        };
+	        }
 
-	        /* map */
 	        function mapStateToProps(state) {
 	            return {
 	                status: state
@@ -8614,22 +8624,42 @@
 	        }
 
 	        function mapDispatchToProps(dispatch) {
+	            var _onInsert = {
+	                type: 'onInsert',
+	                data: null
+	            },
+	                _onEdit = {
+	                type: 'onEdit',
+	                data: null
+	            },
+	                _onResize = {
+	                type: 'onResize',
+	                data: null
+	            },
+	                _onPreviewUpdate = {
+	                type: 'onPreviewUpdate',
+	                data: null
+	            };
 	            return {
-	                insert_block: function insert_block() {
-	                    dispatch(_insert_block);
+	                onInsert: function onInsert() {
+	                    dispatch(_onInsert);
 	                },
-	                editing: function editing(block_id, text) {
-	                    _editing.data.block_id = block_id;
-	                    _editing.data.block_text = text;
-	                    dispatch(_editing);
+	                onEdit: function onEdit(section) {
+	                    _onEdit.data = section;
+	                    dispatch(_onEdit);
 	                },
-	                handleResize: function handleResize() {
-	                    dispatch(_handleResize);
+	                onResize: function onResize() {
+	                    dispatch(_onResize);
+	                },
+	                onPreviewUpdate: function onPreviewUpdate(preview_offsetY) {
+	                    _onPreviewUpdate.data = preview_offsetY;
+	                    console.log(preview_offsetY);
+	                    dispatch(_onPreviewUpdate);
 	                }
 	            };
 	        }
 
-	        var App = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Editer);
+	        var App = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Editor);
 
 	        _reactDom2['default'].render(_react2['default'].createElement(_reactRedux.Provider, { store: store }, _react2['default'].createElement(App, null)), document.getElementById('editer'));
 
