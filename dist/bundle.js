@@ -36961,7 +36961,7 @@ var View = _react2['default'].createClass({
 
         (0, _jquery2['default'])(children).each(function (idx, child) {
             preview_offsetY.push(h);
-            h += (0, _jquery2['default'])(child).height();
+            h += (0, _jquery2['default'])(child).outerHeight(true);
         });
         return preview_offsetY;
     },

@@ -20,7 +20,7 @@ var View = React.createClass({
 
         $(children).each(function(idx, child){
             preview_offsetY.push(h);
-            h += $(child).height();
+            h += $(child).outerHeight(true);
         });
         return preview_offsetY;
     },
