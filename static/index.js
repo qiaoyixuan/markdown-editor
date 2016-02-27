@@ -9,8 +9,8 @@ var Editor = React.createClass({
 
     getInitialState: function(){
         return {
-            preview_offsetY: [],//
-            tokens_level1_offsetY: [],//
+            preview_offsetY: [],
+            tokens_level1_offsetY: [],
             preview_html: '',
         }
     },
@@ -18,9 +18,8 @@ var Editor = React.createClass({
     render: function(){
         let self  = this,
             { preview_html, tokens_level1_offsetY, preview_offsetY } = this.state,
+            
             onChange = function(divs_raw_text, divs_offsetY){
-
-                // console.log(divs_raw_text, divs_offsetY)
 
                 tokens_level1_offsetY = [];
 
@@ -41,15 +40,15 @@ var Editor = React.createClass({
                     preview_html,
                     tokens_level1_offsetY
                 });
-                // console.log(state.tokens_level1_offsetY)
 
             },
+
             onRender = function(preview_offsetY){
                 self.setState({
                     preview_offsetY
                 });
-                // console.log('tokens_level1_offsetY', tokens_level1_offsetY.length, 'preview_offsetY', preview_offsetY.length)
             },
+
             scrollTo = function(dict, scrollTop){
                 if(scrollTop){
                     if(dict)
@@ -57,11 +56,15 @@ var Editor = React.createClass({
                     else
                         self.refs.__edit__.setScrollTop(scrollTop);
                 }
-                // console.log(dict, scrollTop)
+            },
+
+            newSection = function(){
+                self.refs.__edit__.insert_section();
             }
+
         return (<div className='editor'>
                     <div className='options'>
-                        <button className='insert' /*onClick={onInsert}*/>SECTION</button>
+                        <button className='insert' onClick={newSection}>插入</button>
                     </div>
                     <div className='editor-warpper'>
                         <Edit 
@@ -97,7 +100,8 @@ var Edit = React.createClass({
                 section: null
             }],
             divs_offsetY: [],
-            divs_raw_text: null
+            divs_raw_text: null,
+            section_num: 0
         }
     },
 
@@ -105,6 +109,19 @@ var Edit = React.createClass({
         if (!self.on_target) {
             this.refs.edit.scrollTop = y;
         }
+    },
+
+    insert_section: function(){
+        let { section_num, sections } = this.state;
+        section_num ++;
+        sections.push({
+            section_id: section_num,
+            section: null
+        });
+        this.setState({
+            section_num,
+            sections
+        });
     },
 
     componentDidMount: function(){
@@ -136,6 +153,7 @@ var Edit = React.createClass({
             onUpdate = (section) => {
                 divs_raw_text = '';
                 sections[section.id].section = section;
+                divs_offsetY = [];
 
                 for (var i = 0, cur_offset = 0; i < sections.length; i++) {
                     divs_raw_text += sections[i].section.raw_text;
@@ -253,7 +271,8 @@ var View = React.createClass({
 
         setInterval(function(){
             self.props.onRender(self.update());
-        }, 2500);    
+        }, 2500);  
+          
     },
 
     render: function(){

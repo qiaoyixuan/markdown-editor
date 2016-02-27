@@ -36757,8 +36757,8 @@ var Editor = _react2['default'].createClass({
 
     getInitialState: function getInitialState() {
         return {
-            preview_offsetY: [], //
-            tokens_level1_offsetY: [], //
+            preview_offsetY: [],
+            tokens_level1_offsetY: [],
             preview_html: ''
         };
     },
@@ -36769,9 +36769,8 @@ var Editor = _react2['default'].createClass({
         var preview_html = _state.preview_html;
         var tokens_level1_offsetY = _state.tokens_level1_offsetY;
         var preview_offsetY = _state.preview_offsetY;
-        var onChange = function onChange(divs_raw_text, divs_offsetY) {
 
-            // console.log(divs_raw_text, divs_offsetY)
+        var onChange = function onChange(divs_raw_text, divs_offsetY) {
 
             tokens_level1_offsetY = [];
 
@@ -36793,20 +36792,24 @@ var Editor = _react2['default'].createClass({
                 preview_html: preview_html,
                 tokens_level1_offsetY: tokens_level1_offsetY
             });
-            // console.log(state.tokens_level1_offsetY)
         };
+
         var onRender = function onRender(preview_offsetY) {
             self.setState({
                 preview_offsetY: preview_offsetY
             });
-            // console.log('tokens_level1_offsetY', tokens_level1_offsetY.length, 'preview_offsetY', preview_offsetY.length)
         };
+
         var scrollTo = function scrollTo(dict, scrollTop) {
             if (scrollTop) {
                 if (dict) self.refs.__view__.setScrollTop(scrollTop);else self.refs.__edit__.setScrollTop(scrollTop);
             }
-            // console.log(dict, scrollTop)
         };
+
+        var newSection = function newSection() {
+            self.refs.__edit__.insert_section();
+        };
+
         return _react2['default'].createElement(
             'div',
             { className: 'editor' },
@@ -36815,8 +36818,8 @@ var Editor = _react2['default'].createClass({
                 { className: 'options' },
                 _react2['default'].createElement(
                     'button',
-                    { className: 'insert' /*onClick={onInsert}*/ },
-                    'SECTION'
+                    { className: 'insert', onClick: newSection },
+                    '插入'
                 )
             ),
             _react2['default'].createElement(
@@ -36856,7 +36859,8 @@ var Edit = _react2['default'].createClass({
                 section: null
             }],
             divs_offsetY: [],
-            divs_raw_text: null
+            divs_raw_text: null,
+            section_num: 0
         };
     },
 
@@ -36864,6 +36868,22 @@ var Edit = _react2['default'].createClass({
         if (!self.on_target) {
             this.refs.edit.scrollTop = y;
         }
+    },
+
+    insert_section: function insert_section() {
+        var _state2 = this.state;
+        var section_num = _state2.section_num;
+        var sections = _state2.sections;
+
+        section_num++;
+        sections.push({
+            section_id: section_num,
+            section: null
+        });
+        this.setState({
+            section_num: section_num,
+            sections: sections
+        });
     },
 
     componentDidMount: function componentDidMount() {
@@ -36901,6 +36921,7 @@ var Edit = _react2['default'].createClass({
         var onUpdate = function onUpdate(section) {
             divs_raw_text = '';
             sections[section.id].section = section;
+            divs_offsetY = [];
 
             for (var i = 0, cur_offset = 0; i < sections.length; i++) {
                 divs_raw_text += sections[i].section.raw_text;
