@@ -36733,6 +36733,10 @@ module.exports=/[\0-\uD7FF\uDC00-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-
 },{}],230:[function(require,module,exports){
 'use strict';
 
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -36741,107 +36745,9 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactDom = require('react-dom');
+var _Section = require('./Section');
 
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
-var _jquery = require('jquery');
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-var md = require('guide-markdown')(),
-    mdContainer = require('markdown-it-container');
-
-var Editor = _react2['default'].createClass({
-    displayName: 'Editor',
-
-    getInitialState: function getInitialState() {
-        return {
-            preview_offsetY: [],
-            tokens_level1_offsetY: [],
-            preview_html: ''
-        };
-    },
-
-    render: function render() {
-        var self = this;
-        var _state = this.state;
-        var preview_html = _state.preview_html;
-        var tokens_level1_offsetY = _state.tokens_level1_offsetY;
-        var preview_offsetY = _state.preview_offsetY;
-
-        var onChange = function onChange(divs_raw_text, divs_offsetY) {
-
-            tokens_level1_offsetY = [];
-
-            var tokens = md.parse(divs_raw_text, {}),
-                tmp_tokens = [],
-                n = 0;
-
-            for (var i = 0; i < tokens.length; i++) {
-                tmp_tokens.push(tokens[i]);
-                n += tokens[i].nesting;
-                if (n == 0) {
-                    var map_0 = tmp_tokens[0].map[0];
-                    tokens_level1_offsetY.push(divs_offsetY[map_0]);
-                    tmp_tokens = [];
-                }
-            };
-            preview_html = md.render(divs_raw_text);
-            self.setState({
-                preview_html: preview_html,
-                tokens_level1_offsetY: tokens_level1_offsetY
-            });
-        };
-
-        var onRender = function onRender(preview_offsetY) {
-            self.setState({
-                preview_offsetY: preview_offsetY
-            });
-        };
-
-        var scrollTo = function scrollTo(dict, scrollTop) {
-            if (scrollTop) {
-                if (dict) self.refs.__view__.setScrollTop(scrollTop);else self.refs.__edit__.setScrollTop(scrollTop);
-            }
-        };
-
-        var newSection = function newSection() {
-            self.refs.__edit__.insert_section();
-        };
-
-        return _react2['default'].createElement(
-            'div',
-            { className: 'editor' },
-            _react2['default'].createElement(
-                'div',
-                { className: 'options' },
-                _react2['default'].createElement(
-                    'button',
-                    { className: 'insert', onClick: newSection },
-                    '插入'
-                )
-            ),
-            _react2['default'].createElement(
-                'div',
-                { className: 'editor-warpper' },
-                _react2['default'].createElement(Edit, {
-                    ref: '__edit__',
-                    onChange: onChange,
-                    scrollTo: scrollTo,
-                    preview_offsetY: preview_offsetY,
-                    tokens_level1_offsetY: tokens_level1_offsetY }),
-                _react2['default'].createElement(View, {
-                    ref: '__view__',
-                    onRender: onRender,
-                    scrollTo: scrollTo,
-                    preview_html: preview_html,
-                    preview_offsetY: preview_offsetY,
-                    tokens_level1_offsetY: tokens_level1_offsetY })
-            )
-        );
-    }
-});
+var _Section2 = _interopRequireDefault(_Section);
 
 var Edit = _react2['default'].createClass({
     displayName: 'Edit',
@@ -36871,9 +36777,9 @@ var Edit = _react2['default'].createClass({
     },
 
     insert_section: function insert_section() {
-        var _state2 = this.state;
-        var section_num = _state2.section_num;
-        var sections = _state2.sections;
+        var _state = this.state;
+        var section_num = _state.section_num;
+        var sections = _state.sections;
 
         section_num++;
         sections.push({
@@ -36954,11 +36860,31 @@ var Edit = _react2['default'].createClass({
             'div',
             _extends({ className: 'edit', ref: 'edit' }, obj),
             sections.map(function (section, i) {
-                return _react2['default'].createElement(Section, { section: section, key: i, onUpdate: onUpdate });
+                return _react2['default'].createElement(_Section2['default'], { section: section, key: i, onUpdate: onUpdate });
             })
         );
     }
 });
+
+exports['default'] = Edit;
+module.exports = exports['default'];
+
+},{"./Section":231,"react":223}],231:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _jquery = require('jquery');
+
+var _jquery2 = _interopRequireDefault(_jquery);
 
 var Section = _react2['default'].createClass({
     displayName: 'Section',
@@ -36993,6 +36919,28 @@ var Section = _react2['default'].createClass({
         );
     }
 });
+
+exports['default'] = Section;
+module.exports = exports['default'];
+
+},{"jquery":83,"react":223}],232:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _jquery = require('jquery');
+
+var _jquery2 = _interopRequireDefault(_jquery);
 
 var View = _react2['default'].createClass({
     displayName: 'View',
@@ -37030,10 +36978,10 @@ var View = _react2['default'].createClass({
 
         preview.addEventListener('scroll', function () {
             if (self.on_target) {
-                var _self$props2 = self.props;
-                var _scrollTo2 = _self$props2.scrollTo;
-                var preview_offsetY = _self$props2.preview_offsetY;
-                var tokens_level1_offsetY = _self$props2.tokens_level1_offsetY;
+                var _self$props = self.props;
+                var _scrollTo = _self$props.scrollTo;
+                var preview_offsetY = _self$props.preview_offsetY;
+                var tokens_level1_offsetY = _self$props.tokens_level1_offsetY;
                 var another = tokens_level1_offsetY;
                 var other = preview_offsetY;
                 var scrollTop = self.refs.preview.scrollTop;
@@ -37042,7 +36990,7 @@ var View = _react2['default'].createClass({
                         var per = (scrollTop - other[i]) / (other[i + 1] - other[i]);
                         if (per) {
                             var offsetY = (another[i + 1] - another[i]) * per + another[i];
-                            _scrollTo2(false, offsetY);
+                            _scrollTo(false, offsetY);
                         }
                     }
                 };
@@ -37079,6 +37027,124 @@ var View = _react2['default'].createClass({
     }
 });
 
+exports['default'] = View;
+module.exports = exports['default'];
+
+},{"jquery":83,"react":223}],233:[function(require,module,exports){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _Edit = require('./Edit');
+
+var _Edit2 = _interopRequireDefault(_Edit);
+
+var _View = require('./View');
+
+var _View2 = _interopRequireDefault(_View);
+
+var md = require('guide-markdown')(),
+    mdContainer = require('markdown-it-container');
+
+var Editor = _react2['default'].createClass({
+    displayName: 'Editor',
+
+    getInitialState: function getInitialState() {
+        return {
+            preview_offsetY: [],
+            tokens_level1_offsetY: [],
+            preview_html: ''
+        };
+    },
+
+    render: function render() {
+        var self = this;
+        var _state = this.state;
+        var preview_html = _state.preview_html;
+        var tokens_level1_offsetY = _state.tokens_level1_offsetY;
+        var preview_offsetY = _state.preview_offsetY;
+
+        var onChange = function onChange(divs_raw_text, divs_offsetY) {
+
+            tokens_level1_offsetY = [];
+
+            var tokens = md.parse(divs_raw_text, {}),
+                tmp_tokens = [],
+                n = 0;
+
+            for (var i = 0; i < tokens.length; i++) {
+                tmp_tokens.push(tokens[i]);
+                n += tokens[i].nesting;
+                if (n == 0) {
+                    var map_0 = tmp_tokens[0].map[0];
+                    tokens_level1_offsetY.push(divs_offsetY[map_0]);
+                    tmp_tokens = [];
+                }
+            };
+            preview_html = md.render(divs_raw_text);
+            self.setState({
+                preview_html: preview_html,
+                tokens_level1_offsetY: tokens_level1_offsetY
+            });
+        };
+
+        var onRender = function onRender(preview_offsetY) {
+            self.setState({
+                preview_offsetY: preview_offsetY
+            });
+        };
+
+        var scrollTo = function scrollTo(dict, scrollTop) {
+            if (scrollTop) {
+                if (dict) self.refs.__view__.setScrollTop(scrollTop);else self.refs.__edit__.setScrollTop(scrollTop);
+            }
+        };
+
+        var newSection = function newSection() {
+            self.refs.__edit__.insert_section();
+        };
+
+        return _react2['default'].createElement(
+            'div',
+            { className: 'editor' },
+            _react2['default'].createElement(
+                'div',
+                { className: 'options' },
+                _react2['default'].createElement(
+                    'button',
+                    { className: 'insert', onClick: newSection },
+                    '插入'
+                )
+            ),
+            _react2['default'].createElement(
+                'div',
+                { className: 'editor-warpper' },
+                _react2['default'].createElement(_Edit2['default'], {
+                    ref: '__edit__',
+                    onChange: onChange,
+                    scrollTo: scrollTo,
+                    preview_offsetY: preview_offsetY,
+                    tokens_level1_offsetY: tokens_level1_offsetY }),
+                _react2['default'].createElement(_View2['default'], {
+                    ref: '__view__',
+                    onRender: onRender,
+                    scrollTo: scrollTo,
+                    preview_html: preview_html,
+                    preview_offsetY: preview_offsetY,
+                    tokens_level1_offsetY: tokens_level1_offsetY })
+            )
+        );
+    }
+});
+
 _reactDom2['default'].render(_react2['default'].createElement(Editor, null), document.getElementById('editer'));
 
-},{"guide-markdown":29,"jquery":83,"markdown-it-container":86,"react":223,"react-dom":94}]},{},[230]);
+},{"./Edit":230,"./View":232,"guide-markdown":29,"markdown-it-container":86,"react":223,"react-dom":94}]},{},[233]);
