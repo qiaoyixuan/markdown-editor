@@ -13,7 +13,7 @@ export default React.createClass({
         return {
             sections: [{
                 id: 0,
-                content: '',
+                content: '\n\n\n\n\n',
                 divs_h_list: []
             }],
             section_num: 0
