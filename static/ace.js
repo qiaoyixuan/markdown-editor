@@ -197,7 +197,7 @@ ReactAce.defaultProps = {
     width: '',
     value: '',
     fontSize: 16,
-    showGutter: true,
+    showGutter: false,
     onChange: null,
     onPaste: null,
     onLoad: null,

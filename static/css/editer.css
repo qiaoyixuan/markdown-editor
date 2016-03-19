@@ -66,8 +66,11 @@
     width: 100%;
 }
 
+.ace_line{
+
+}
+
 .section{
-    padding: 10px;
     outline: none;
     font-size: 16px;
     line-height: 27px;
