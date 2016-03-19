@@ -1,40 +1,40 @@
-var webpack = require('webpack');
-var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
-var path = require('path');
+var webpack = require('webpack'),
+    path = require('path');
+
 module.exports = {
-    context: __dirname,
     entry: {
-        index: [
-            'webpack-dev-server/client?http://localhost:3000',
+        bundle: [
+            'webpack-dev-server/client?http://localhost',
             'webpack/hot/dev-server',
-            './static/index.js'
+            './static/index.js',
         ]
     },
     output: {
-        path: path.join(__dirname, 'dist'),
-        filename: 'bundle.js'
-    },
-    resolve: {
-        extensions: ['', '.js', '.jsx']
+        path: path.join(__dirname, 'staic'),
+        filename: "bundle.js"
     },
     module: {
-        loaders: [{
-            test: /\.json$/,
-            loader: "json-loader"
-        }, {
-            test: /\.js$/,
-            loader: 'babel-loader'
-        }, {
-            test: /\.jsx$/,
-            loader: 'babel-loader!jsx-loader?harmony'
-        }, {
-            test: /\.js?$/,
-            loaders: ['react-hot', 'babel'],
-            include: [path.join(__dirname, 'static')]
-        }]
+        loaders: [
+            { test: /\.json$/, loader: "json-loader" },
+            { test: /\.css$/, loader: "style!css" },
+            { test: /\.less$/, loader: "style!css!less" },
+            { test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192'},
+            {
+                test: /\.jsx?$/,
+                exclude: /node_modules/,
+                loaders: ['react-hot', 'babel?presets[]=stage-0&presets[]=es2015&presets[]=react&plugins[]=transform-object-assign']
+            }
+        ]
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
-    ]
+        new webpack.NoErrorsPlugin(),
+        new webpack.DefinePlugin({
+            __DEVELOPMENT__: true,
+            __DEVTOOLS__: true,
+			"process.env": {
+				NODE_ENV: JSON.stringify("development")
+			}
+        })
+    ],
+    devtool: 'eval-source-map'
 };

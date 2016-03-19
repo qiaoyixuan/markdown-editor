@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import Section from './Section'
 
-var Edit = React.createClass({
+export default React.createClass({
 
     propTypes: {
         scrollTo: PropTypes.func.isRequired,
@@ -12,11 +12,10 @@ var Edit = React.createClass({
     getInitialState: function(){
         return {
             sections: [{
-                section_id: 0,
-                section: null
+                id: 0,
+                content: '',
+                divs_h_list: []
             }],
-            divs_offsetY: [],
-            divs_raw_text: null,
             section_num: 0
         }
     },
@@ -31,8 +30,9 @@ var Edit = React.createClass({
         let { section_num, sections } = this.state;
         section_num ++;
         sections.push({
-            section_id: section_num,
-            section: null
+            id: section_num,
+            content: '\n\n\n\n\n',
+            divs_h_list: []
         });
         this.setState({
             section_num,
@@ -43,7 +43,7 @@ var Edit = React.createClass({
     componentDidMount: function(){
         let self = this,
             edit = self.refs.edit;
-            
+
         edit.addEventListener('scroll', function(){
             if (self.on_target) {
                 let { scrollTo, preview_offsetY, tokens_level1_offsetY } = self.props,
@@ -61,33 +61,42 @@ var Edit = React.createClass({
                 };
             }
         });
+
+    },
+
+    onUpdate: function(section) {
+        let { sections } = this.state,
+            all_content  = '',
+            divs_offsetY = [];
+
+        for (var i = 0; i < sections.length; i++) {
+            if( sections[i].id == section.id ) {
+                sections[i].content = section.content;
+                sections[i].divs_h_list = section.divs_h_list;
+            }
+        }
+
+        for (var i = 0, cur_offset = 0; i < sections.length; i++) {
+            all_content += sections[i].content;
+            for (var j = 0; j < sections[i].divs_h_list.length; j++) {
+                divs_offsetY.push(cur_offset);
+                cur_offset += sections[i].divs_h_list[j];
+            }
+        }
+
+        this.setState({
+            sections,
+            divs_offsetY,
+            all_content
+        });
+        console.log(divs_offsetY);
+
+        this.props.onChange(all_content, divs_offsetY);
     },
 
     render: function(){
         let self = this,
-            { sections, divs_offsetY, divs_raw_text } = self.state,
-            onUpdate = (section) => {
-                divs_raw_text = '';
-                sections[section.id].section = section;
-                divs_offsetY = [];
-
-                for (var i = 0, cur_offset = 0; i < sections.length; i++) {
-                    divs_raw_text += sections[i].section.raw_text;
-                    for (var j = 0; j < sections[i].section.divs_height_list.length; j++) {
-                        divs_offsetY.push(cur_offset);
-                        cur_offset += sections[i].section.divs_height_list[j];
-                    };
-
-                };
-
-                self.setState({
-                    sections,
-                    divs_offsetY,
-                    divs_raw_text
-                });
-
-                self.props.onChange(divs_raw_text, divs_offsetY);
-            },
+            { sections } = this.state,
             onMouseOver, onMouseOut, onFocus, onBlur, obj;
 
         onMouseOver = onFocus = () => self.on_target = true;
@@ -97,10 +106,11 @@ var Edit = React.createClass({
 
         return (<div className='edit' ref='edit' {...obj}>
                     {sections.map(function(section, i){
-                        return (<Section section={section} key={i} onUpdate={onUpdate}></Section>);
+                        return (<Section
+                                    key={i}
+                                    section={section}
+                                    onUpdate={self.onUpdate} />);
                     })}
                 </div>);
     }
 });
-
-export default Edit

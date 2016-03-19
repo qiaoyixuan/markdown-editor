@@ -17,17 +17,24 @@
 
 .edit, .preview-container{
     width: 47%;
-    overflow-y: auto; 
+    overflow-y: auto;
 }
 
 .options{
     box-shadow: 0 0 5px #bbb;
     height: 40px;
     margin-bottom: 10px;
+    background-color: #444;
+    color: #bbb;
+    font-size: 22px;
 }
 
-.insert{
+.opt-btns{
 
+}
+
+.opt-btns > li{
+    display: inline-block;
 }
 
 .edit{
@@ -52,12 +59,16 @@
 }
 
 .section-warpper{
-    border-bottom: 1px dashed #BBB;
+    /*border-bottom: 1px dashed #BBB;*/
+}
+
+.ace_editor{
+    width: 100%;
 }
 
 .section{
     padding: 10px;
-    outline: none;    
+    outline: none;
     font-size: 16px;
     line-height: 27px;
 }
@@ -77,7 +88,7 @@ h2{
     font-size: 26px;
 }
 
-h3{    
+h3{
     margin: 20px 0;
     font-size: 21px;
 }
@@ -112,7 +123,6 @@ pre{
     background-color: #F8F9FA;
     padding: 10px 0 10px 20px;
     line-height: 20px;
-    box-shadow: 0 0 1px #ccc;
 }
 
 ul{

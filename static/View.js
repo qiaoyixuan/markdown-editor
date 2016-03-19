@@ -13,8 +13,8 @@ var View = React.createClass({
 
     update: function(){
         let self            = this,
-            children        = $(self.refs.view).children(), 
-            h               = 0, 
+            children        = $(self.refs.view).children(),
+            h               = 0,
             preview_offsetY = []
 
 
@@ -55,7 +55,7 @@ var View = React.createClass({
 
         setInterval(function(){
             self.props.onRender(self.update());
-        }, 2500);  
+        }, 2500);
 
     },
 

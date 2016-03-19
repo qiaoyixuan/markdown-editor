@@ -19,12 +19,11 @@ var Editor = React.createClass({
     render: function(){
         let self  = this,
             { preview_html, tokens_level1_offsetY, preview_offsetY } = this.state,
-            
-            onChange = function(divs_raw_text, divs_offsetY){
 
+            onChange = function(all_content, divs_offsetY){
                 tokens_level1_offsetY = [];
 
-                let tokens = md.parse(divs_raw_text, {}),
+                let tokens = md.parse(all_content, {}),
                     tmp_tokens = [], n = 0;
 
                 for (var i = 0; i < tokens.length; i++) {
@@ -36,7 +35,7 @@ var Editor = React.createClass({
                         tmp_tokens = [];
                     }
                 };
-                preview_html = md.render(divs_raw_text);
+                preview_html = md.render(all_content);
                 self.setState({
                     preview_html,
                     tokens_level1_offsetY
@@ -65,19 +64,23 @@ var Editor = React.createClass({
 
         return (<div className='editor'>
                     <div className='options'>
-                        <button className='insert' onClick={newSection}>插入</button>
+                        <ul className='opt-btns'>
+                            <li><i className='fa fa-asterisk' onClick={newSection}></i></li>
+                            <li><i className='fa fa-asterisk' onClick={newSection}></i></li>
+                            <li><i className='fa fa-asterisk' onClick={newSection}></i></li>
+                        </ul>
                     </div>
                     <div className='editor-warpper'>
-                        <Edit 
+                        <Edit
                             ref='__edit__'
-                            onChange={onChange} 
+                            onChange={onChange}
                             scrollTo={scrollTo}
                             preview_offsetY={preview_offsetY}
                             tokens_level1_offsetY={tokens_level1_offsetY}/>
-                        <View 
+                        <View
                             ref='__view__'
-                            onRender={onRender} 
-                            scrollTo={scrollTo} 
+                            onRender={onRender}
+                            scrollTo={scrollTo}
                             preview_html={preview_html}
                             preview_offsetY={preview_offsetY}
                             tokens_level1_offsetY={tokens_level1_offsetY}/>
