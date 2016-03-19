@@ -6,7 +6,7 @@ module.exports = {
         bundle: [
             'webpack-dev-server/client?http://localhost',
             'webpack/hot/dev-server',
-            './static/index.js',
+            './index.js',
         ]
     },
     output: {
