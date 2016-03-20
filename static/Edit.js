@@ -1,10 +1,10 @@
 import React, { PropTypes } from 'react'
 import Section from './Section'
 
-let newSec = function(id) {
+let newSec = function(id, content) {
     return {
         id: id,
-        content: '\n\n\n\n\n',
+        content: content,
         divs_h_list: []
     };
 }
@@ -19,7 +19,7 @@ export default React.createClass({
 
     getInitialState: function(){
         return {
-            sections: [newSec(0)],
+            sections: [newSec(0, '# 欢迎使用 Markdown 编辑阅读器\n')],
             section_num: 0
         }
     },
@@ -33,7 +33,7 @@ export default React.createClass({
     insert_section: function(){
         let { section_num, sections } = this.state;
         section_num ++;
-        sections.push(newSec(section_num));
+        sections.push(newSec(section_num, '新区块\n'));
         this.setState({
             section_num,
             sections

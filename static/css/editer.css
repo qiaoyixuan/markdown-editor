@@ -42,6 +42,7 @@
     float: left;
     margin-left: 2%;
     border: 1px dashed #BBB;
+    background-color: #F9F9F9;
 }
 
 .preview-container{
@@ -58,13 +59,9 @@
     margin-bottom: 10px;
 }
 
-.ace-tomorrow {
-    background-color: #F9F9F5 !important;
-}
-
 .ace_editor{
     width: 100%;
-    border-bottom: 1px dashed #BBB;
+    /*border-bottom: 1px dashed #BBB;*/
 }
 
 .section-warpper:nth-child(odd){

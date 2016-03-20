@@ -36,6 +36,7 @@ var Editor = React.createClass({
                     }
                 };
                 preview_html = md.render(all_content);
+
                 self.setState({
                     preview_html,
                     tokens_level1_offsetY

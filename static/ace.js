@@ -58,7 +58,8 @@ export default class ReactAce extends Component {
         this.editor.on('copy', this.onCopy);
         this.editor.on('paste', this.onPaste);
         this.editor.on('change', this.onChange);
-
+        this.editor.gotoLine(1);
+        
         if (keyboardHandler) {
             this.editor.setKeyboardHandler('ace/keyboard/' + keyboardHandler);
         }
