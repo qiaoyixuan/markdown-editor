@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import AceEditor from './ace';
-import {noop, reduce, map, compose} from 'kd-utils';
+import {map} from 'kd-utils';
 import $ from 'jquery'
 
 import 'brace/mode/markdown';
@@ -22,6 +22,10 @@ export default React.createClass({
         };
     },
 
+	shouldComponentUpdate: function(nextProps) {
+		return false;
+	},
+
     componentDidMount: function(){
         this.emitChange();
         let timer = setInterval(() => {
@@ -33,6 +37,7 @@ export default React.createClass({
         this.setState({
             content
         });
+        this.emitChange();
     },
 
     emitChange: function(){
