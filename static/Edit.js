@@ -1,6 +1,14 @@
 import React, { PropTypes } from 'react'
 import Section from './Section'
 
+let newSec = function(id) {
+    return {
+        id: id,
+        content: '\n\n\n\n\n',
+        divs_h_list: []
+    };
+}
+
 export default React.createClass({
 
     propTypes: {
@@ -11,11 +19,7 @@ export default React.createClass({
 
     getInitialState: function(){
         return {
-            sections: [{
-                id: 0,
-                content: '\n\n\n\n\n',
-                divs_h_list: []
-            }],
+            sections: [newSec(0)],
             section_num: 0
         }
     },
@@ -29,11 +33,7 @@ export default React.createClass({
     insert_section: function(){
         let { section_num, sections } = this.state;
         section_num ++;
-        sections.push({
-            id: section_num,
-            content: '\n\n\n\n\n',
-            divs_h_list: []
-        });
+        sections.push(newSec(section_num));
         this.setState({
             section_num,
             sections
@@ -89,7 +89,6 @@ export default React.createClass({
             divs_offsetY,
             all_content
         });
-        console.log(divs_offsetY);
 
         this.props.onChange(all_content, divs_offsetY);
     },

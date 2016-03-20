@@ -5,7 +5,7 @@ import {noop, reduce, map, compose} from 'kd-utils';
 import $ from 'jquery'
 
 import 'brace/mode/markdown';
-import 'brace/theme/github';
+import 'brace/theme/dawn';
 
 export default React.createClass({
 
@@ -22,8 +22,20 @@ export default React.createClass({
         };
     },
 
-    onInput: function(text){
+    componentDidMount: function(){
+        this.emitChange();
+        let timer = setInterval(() => {
+            this.emitChange({});
+        }, 3000);
+    },
 
+    onInput: function(content){
+        this.setState({
+            content
+        });
+    },
+
+    emitChange: function(){
         let editor = ReactDom.findDOMNode(this.refs.__ace__),
             children = $(editor).find('.ace_line_group'),
             {id, content, divs_h_list}   = this.state;
@@ -31,16 +43,12 @@ export default React.createClass({
         divs_h_list = map(function(item){
             return $(item).height();
         }, children);
-        // console.log(divs_h_list)
-        this.props.onUpdate({
-            id: id,
-            content: text,
-            divs_h_list: divs_h_list
-        });
 
         this.setState({
-            content: text
+            divs_h_list
         });
+
+        this.props.onUpdate(this.state);
     },
 
     render: function(){
@@ -48,8 +56,8 @@ export default React.createClass({
                     <AceEditor
     					ref='__ace__'
     					mode="markdown"
-    					theme="github"
-    					className="section"
+                        theme='dawn'
+    					className="section ace-dawn"
     					name={'_' + this.state.id}
     					value={this.props.section.content}
                         onChange={this.onInput} />

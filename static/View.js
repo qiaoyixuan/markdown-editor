@@ -55,7 +55,7 @@ var View = React.createClass({
 
         setInterval(function(){
             self.props.onRender(self.update());
-        }, 2500);
+        }, 3000);
 
     },
 

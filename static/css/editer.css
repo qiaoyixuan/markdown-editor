@@ -58,16 +58,21 @@
     margin-bottom: 10px;
 }
 
-.section-warpper{
-    /*border-bottom: 1px dashed #BBB;*/
+.ace-tomorrow {
+    background-color: #F9F9F5 !important;
 }
 
 .ace_editor{
     width: 100%;
+    border-bottom: 1px dashed #BBB;
 }
 
-.ace_line{
+.section-warpper:nth-child(odd){
+    background-color: #fff;
+}
 
+.section-warpper:nth-child(even){
+    background-color: #eee;
 }
 
 .section{
