@@ -21,7 +21,7 @@ export default React.createClass({
         return {
             sections: [newSec(0, '# 欢迎使用 Markdown 编辑阅读器\n')],
             section_num: 0
-        }
+        };
     },
 
     setScrollTop: function (y) {
