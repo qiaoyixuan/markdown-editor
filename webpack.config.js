@@ -31,9 +31,9 @@ module.exports = {
         new webpack.DefinePlugin({
             __DEVELOPMENT__: true,
             __DEVTOOLS__: true,
-			"process.env": {
-				NODE_ENV: JSON.stringify("development")
-			}
+      			"process.env": {
+      				NODE_ENV: JSON.stringify("development")
+      			}
         })
     ],
     devtool: 'eval-source-map'

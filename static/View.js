@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import $ from 'jquery'
 
-var View = React.createClass({
+export default React.createClass({
 
     propTypes: {
         onRender: PropTypes.func.isRequired,
@@ -11,37 +11,36 @@ var View = React.createClass({
         tokens_level1_offsetY: PropTypes.array.isRequired
     },
 
-    update: function(){
+    update: function () {
         let self            = this,
             children        = $(self.refs.view).children(),
             h               = 0,
             preview_offsetY = []
 
-
-        $(children).each(function(idx, child){
+        $(children).each((idx, child) => {
             preview_offsetY.push(h);
             h += $(child).outerHeight(true);
         });
         return preview_offsetY;
     },
 
-    setScrollTop: function(y){
+    setScrollTop: function (y) {
         if (!self.on_target) {
             this.refs.preview.scrollTop = y;
         }
     },
 
-    componentDidMount: function(){
+    componentDidMount: function () {
         let self = this,
             preview = self.refs.preview;
 
-        preview.addEventListener('scroll', function(){
+        preview.addEventListener('scroll', () => {
             if (self.on_target) {
-                let { scrollTo, preview_offsetY, tokens_level1_offsetY } = self.props,
+                var { scrollTo, preview_offsetY, tokens_level1_offsetY } = self.props,
                     another = tokens_level1_offsetY,
                     other = preview_offsetY,
                     scrollTop = self.refs.preview.scrollTop;
-                for (var i = 0; i < other.length - 1; i++) {
+                for (let i = 0; i < other.length - 1; i++) {
                     if(scrollTop > other[i] && scrollTop < other[i + 1]){
                         var per = (scrollTop - other[i]) / (other[i + 1] - other[i]);
                         if(per){
@@ -53,7 +52,7 @@ var View = React.createClass({
             }
         });
 
-        setInterval(function(){
+        setInterval(() => {
             self.props.onRender(self.update());
         }, 3000);
 
@@ -73,5 +72,3 @@ var View = React.createClass({
                 </div>)
     }
 });
-
-export default View

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import AceEditor from './ace';
-import {map} from 'kd-utils';
+import {map} from 'kit-utils';
 import $ from 'jquery'
 
 import 'brace/mode/markdown';
@@ -13,7 +13,7 @@ export default React.createClass({
         onUpdate: React.PropTypes.func
     },
 
-    getInitialState: function(){
+    getInitialState: function () {
         let {id, content} = this.props.section;
         return {
             id: id,
@@ -22,30 +22,30 @@ export default React.createClass({
         };
     },
 
-	shouldComponentUpdate: function(nextProps) {
+	shouldComponentUpdate: nextProps => {
 		return false;
 	},
 
-    componentDidMount: function(){
+    componentDidMount: function () {
         this.emitChange();
         let timer = setInterval(() => {
             this.emitChange({});
         }, 3000);
     },
 
-    onInput: function(content){
+    onInput: function (content) {
         this.setState({
             content
         });
         this.emitChange();
     },
 
-    emitChange: function(){
+    emitChange: function () {
         let editor = ReactDom.findDOMNode(this.refs.__ace__),
             children = $(editor).find('.ace_line_group'),
             {id, content, divs_h_list}   = this.state;
 
-        divs_h_list = map(function(item){
+        divs_h_list = map(item => {
             return $(item).height();
         }, children);
 
@@ -56,15 +56,15 @@ export default React.createClass({
         this.props.onUpdate(this.state);
     },
 
-    render: function(){
+    render: function () {
         return (<div className='section-warpper'>
                     <AceEditor
-    					ref='__ace__'
-    					mode="markdown"
+                		ref='__ace__'
+                		mode="markdown"
                         theme='dawn'
-    					className="section ace-dawn"
-    					name={'_' + this.state.id}
-    					value={this.props.section.content}
+                		className="section ace-dawn"
+                		name={'_' + this.state.id}
+                		value={this.props.section.content}
                         onChange={this.onInput} />
                 </div>)
     }

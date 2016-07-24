@@ -1,14 +1,14 @@
-import React, { PropTypes } from 'react'
-import ReactDOM from 'react-dom'
-import Edit from './Edit'
-import View from './View'
+import React, { PropTypes } from 'react';
+import ReactDOM from 'react-dom';
+import Edit from './Edit';
+import View from './View';
 
-var md          = require('guide-markdown')(),
+var md          = require('kit-markdown')(),
     mdContainer = require('markdown-it-container');
 
 var Editor = React.createClass({
 
-    getInitialState: function(){
+    getInitialState: () => {
         return {
             preview_offsetY: [],
             tokens_level1_offsetY: [],
@@ -16,17 +16,17 @@ var Editor = React.createClass({
         }
     },
 
-    render: function(){
-        let self  = this,
+    render: function () {
+        var self = this,
             { preview_html, tokens_level1_offsetY, preview_offsetY } = this.state,
 
-            onChange = function(all_content, divs_offsetY){
+            onChange = (all_content, divs_offsetY) => {
                 tokens_level1_offsetY = [];
 
-                let tokens = md.parse(all_content, {}),
+                var tokens = md.parse(all_content, {}),
                     tmp_tokens = [], n = 0;
 
-                for (var i = 0; i < tokens.length; i++) {
+                for (let i = 0; i < tokens.length; i++) {
                     tmp_tokens.push(tokens[i]);
                     n += tokens[i].nesting;
                     if(n == 0){
@@ -35,33 +35,30 @@ var Editor = React.createClass({
                         tmp_tokens = [];
                     }
                 };
-                preview_html = md.render(all_content);
-
-                self.setState({
-                    preview_html,
-                    tokens_level1_offsetY
+                md.render(all_content).then(preview_html => {
+                      self.setState({
+                          preview_html,
+                          tokens_level1_offsetY
+                      });
                 });
-
             },
 
-            onRender = function(preview_offsetY){
+            onRender = preview_offsetY => {
                 self.setState({
                     preview_offsetY
                 });
             },
 
-            scrollTo = function(dict, scrollTop){
+            scrollTo = (dict, scrollTop) => {
                 if(scrollTop){
-                    if(dict)
-                        self.refs.__view__.setScrollTop(scrollTop);
-                    else
-                        self.refs.__edit__.setScrollTop(scrollTop);
+                    if(dict) self.refs.__view__.setScrollTop(scrollTop);
+                    else self.refs.__edit__.setScrollTop(scrollTop);
                 }
             },
 
-            newSection = function(){
+            newSection = () => {
                 self.refs.__edit__.insert_section();
-            }
+            };
 
         return (<div className='editor'>
                     <div className='options'>

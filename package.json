@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "author": "Sawyer",
   "scripts": {
-    "dev": "sudo webpack-dev-server --inline --hot --config webpack.config.js --port 80",
+    "dev": "webpack-dev-server --inline --hot --config webpack.config.js --port 80",
     "start": "watchify --extension=js -o dist/bundle.js static/index.js"
   },
   "browserify": {
@@ -22,12 +22,12 @@
     "commander": "^2.9.0",
     "copy-webpack-plugin": "^1.1.1",
     "css-loader": "^0.23.1",
-    "fsevents": "^1.0.8",
     "gulp": "^3.9.1",
     "html-webpack-plugin": "^2.8.2",
     "json-loader": "^0.5.4",
     "less": "^2.6.0",
     "less-loader": "^2.2.2",
+    "markdown-it-container": "^2.0.0",
     "nokit": "^0.18.1",
     "react-hot-loader": "^1.3.0",
     "redux-devtools": "^3.1.1",
@@ -39,6 +39,10 @@
   },
   "dependencies": {
     "brace": "^0.7.0",
-    "kd-utils": "git+ssh://git@git.2b6.me:taining.lu/kdutils.git"
+    "guide-markdown": "git+ssh://git@github.com/qiaoyixuan/markdown2html.git",
+    "jquery": "^3.1.0",
+    "kit-markdown": "git+ssh://git@github.com/qiaoyixuan/markdown2html.git",
+    "kit-utils": "git+ssh://git@github.com:qiaoyixuan/utils.git",
+    "react-dom": "^15.2.1"
   }
 }
