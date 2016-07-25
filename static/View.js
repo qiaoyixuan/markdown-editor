@@ -40,7 +40,7 @@ export default React.createClass({
 
     },
 
-    render: function(){
+    render: function () {
         let self = this,
             onMouseOver, onMouseOut, onFocus, onBlur, obj;
 
@@ -51,6 +51,6 @@ export default React.createClass({
 
         return (<div className='preview-container' ref='preview' {...obj}>
                     <div className='view' ref='view' dangerouslySetInnerHTML={{ __html: this.props.preview_html }}></div>
-                </div>)
+                </div>);
     }
 });

@@ -19,7 +19,7 @@ var Editor = React.createClass({
             preview_offsetY: [],
             tokens_level1_offsetY: [],
             preview_html: '',
-        }
+        };
     },
 
     render: function () {

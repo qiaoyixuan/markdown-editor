@@ -34,9 +34,7 @@ export default React.createClass({
     },
 
     onInput: function (content) {
-        this.setState({
-            content
-        });
+        this.setState({ content });
         this.emitChange();
     },
 
@@ -49,9 +47,7 @@ export default React.createClass({
             return $(item).height();
         }, children);
 
-        this.setState({
-            divs_h_list
-        });
+        this.setState({ divs_h_list });
 
         this.props.onUpdate(this.state);
     },

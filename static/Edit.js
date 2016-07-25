@@ -72,7 +72,7 @@ export default React.createClass({
         this.props.onChange(all_content, divs_offsetY);
     },
 
-    render: function(){
+    render: function () {
         let self = this,
             { sections } = this.state,
             onMouseOver, onMouseOut, onFocus, onBlur, obj;
