@@ -1,1 +1,1 @@
-require('./static/app');
+require('./static/components/app');

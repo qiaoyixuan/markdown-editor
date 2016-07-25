@@ -150,6 +150,10 @@ export default class ReactAce extends Component {
         }
     }
 
+    onInsert(text) {
+        this.editor.insert(text);
+    }
+
     render() {
         const {name, className, width, height} = this.props;
         const divStyle = {

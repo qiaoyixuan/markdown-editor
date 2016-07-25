@@ -1,8 +1,11 @@
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import throttle from 'lodash/throttle';
+import isString from 'lodash/isString';
 import Edit from './Edit';
 import View from './View';
+
+require('../css/editor.less')
 
 var md          = require('kit-markdown')(),
     mdContainer = require('markdown-it-container');
@@ -11,6 +14,18 @@ const D = {
     LEFT: 'LEFT',
     RIGHT: 'RIGHT'
 };
+
+const TAGS = [
+    ['fa fa-bold', '加粗', '**粗体**'],
+    ['fa fa-italic', '斜体', '*斜体*'],
+    ['fa fa-link', '链接', '[链接](http://www.google.com)'],
+    ['fa fa-quote-left', '引用', '\n> 段落引用\n'],
+    ['fa fa-code', '代码', '\n```javascript\nconsole.log(\'Hello World\');\n```\n'],
+    ['fa fa-photo', '图片', '\n![The Alt](Photo Link)\n'],
+    ['fa fa-list-ul', '列表项', '\n- 列表项\n'],
+    ['fa fa-list-alt', '标题', '\n## 标题 ##\n'],
+    ['fa fa-minus', '分割线', '\n----------\n']
+];
 
 var Editor = React.createClass({
 
@@ -79,12 +94,30 @@ var Editor = React.createClass({
                 self.setState({
                     preview_offsetY
                 });
+            },
+
+            insertTag = (text) => {
+                this.refs.__edit__.onInsert(text);
+            },
+
+            renderTags = () => {
+                var tags = [];
+                TAGS.map((item, i) => {
+                    tags.push(<li key={i}><i className={item[0]} title={item[1]} onClick={() => {
+                        if(isString(item[2])) {
+                            insertTag(item[2]);
+                            return;
+                        }
+                        item[2]();
+                    }}></i></li>);
+                });
+                return tags;
             };
 
         return (<div className='editor'>
                     <div className='options'>
                         <ul className='opt-btns'>
-                            <li><i className='fa fa-asterisk'></i></li>
+                            {renderTags()}
                         </ul>
                     </div>
                     <div className='editor-warpper'>
