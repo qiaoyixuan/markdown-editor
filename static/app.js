@@ -1,10 +1,16 @@
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
+import throttle from 'lodash/throttle';
 import Edit from './Edit';
 import View from './View';
 
 var md          = require('kit-markdown')(),
     mdContainer = require('markdown-it-container');
+
+const D = {
+    LEFT: 'LEFT',
+    RIGHT: 'RIGHT'
+};
 
 var Editor = React.createClass({
 
@@ -19,6 +25,32 @@ var Editor = React.createClass({
     render: function () {
         var self = this,
             { preview_html, tokens_level1_offsetY, preview_offsetY } = this.state,
+
+            onScroll = direction => throttle(scrollTop => {
+                var fr, to,
+                    target_dict = {
+                        [D.LEFT]:  self.refs.__view__,
+                        [D.RIGHT]: self.refs.__edit__
+                    };
+
+                if(direction === D.LEFT) {
+                    fr = tokens_level1_offsetY;
+                    to = preview_offsetY;
+                } else {
+                    fr = preview_offsetY;
+                    to = tokens_level1_offsetY;
+                }
+
+                for (let i = 0; i < fr.length - 1; i++) {
+                    if(scrollTop > fr[i] && scrollTop < fr[i + 1]) {
+                        var per = (scrollTop - fr[i]) / (fr[i + 1] - fr[i]);
+                        if(per) {
+                            var offsetY = (to[i + 1] - to[i]) * per + to[i];
+                            target_dict[direction].scrollTo(offsetY);
+                        }
+                    }
+                };
+            }, 100),
 
             onChange = (all_content, divs_offsetY) => {
                 tokens_level1_offsetY = [];
@@ -49,13 +81,6 @@ var Editor = React.createClass({
                 });
             },
 
-            scrollTo = (dict, scrollTop) => {
-                if(scrollTop){
-                    if(dict) self.refs.__view__.setScrollTop(scrollTop);
-                    else self.refs.__edit__.setScrollTop(scrollTop);
-                }
-            },
-
             newSection = () => {
                 self.refs.__edit__.insert_section();
             };
@@ -64,30 +89,21 @@ var Editor = React.createClass({
                     <div className='options'>
                         <ul className='opt-btns'>
                             <li><i className='fa fa-asterisk' onClick={newSection}></i></li>
-                            <li><i className='fa fa-asterisk' onClick={newSection}></i></li>
-                            <li><i className='fa fa-asterisk' onClick={newSection}></i></li>
                         </ul>
                     </div>
                     <div className='editor-warpper'>
                         <Edit
                             ref='__edit__'
                             onChange={onChange}
-                            scrollTo={scrollTo}
-                            preview_offsetY={preview_offsetY}
-                            tokens_level1_offsetY={tokens_level1_offsetY}/>
+                            onScroll={onScroll(D.LEFT)} />
                         <View
                             ref='__view__'
                             onRender={onRender}
-                            scrollTo={scrollTo}
-                            preview_html={preview_html}
-                            preview_offsetY={preview_offsetY}
-                            tokens_level1_offsetY={tokens_level1_offsetY}/>
+                            onScroll={onScroll(D.RIGHT)}
+                            preview_html={preview_html} />
                     </div>
-                </div>)
+                </div>);
     }
 });
 
-ReactDOM.render(
-    <Editor />,
-    document.getElementById('editer')
-)
+ReactDOM.render(<Editor />, document.getElementById('editer'));

@@ -5,10 +5,7 @@ export default React.createClass({
 
     propTypes: {
         onRender: PropTypes.func.isRequired,
-        preview_html: PropTypes.string,
-        scrollTo: PropTypes.func.isRequired,
-        preview_offsetY: PropTypes.array.isRequired,
-        tokens_level1_offsetY: PropTypes.array.isRequired
+        preview_html: PropTypes.string
     },
 
     update: function () {
@@ -24,36 +21,21 @@ export default React.createClass({
         return preview_offsetY;
     },
 
-    setScrollTop: function (y) {
-        if (!self.on_target) {
-            this.refs.preview.scrollTop = y;
-        }
+    scrollTo: function (scrollTop) {
+        this.refs.preview.scrollTop = scrollTop;
     },
 
     componentDidMount: function () {
-        let self = this,
-            preview = self.refs.preview;
+        let preview = this.refs.preview;
 
         preview.addEventListener('scroll', () => {
-            if (self.on_target) {
-                var { scrollTo, preview_offsetY, tokens_level1_offsetY } = self.props,
-                    another = tokens_level1_offsetY,
-                    other = preview_offsetY,
-                    scrollTop = self.refs.preview.scrollTop;
-                for (let i = 0; i < other.length - 1; i++) {
-                    if(scrollTop > other[i] && scrollTop < other[i + 1]){
-                        var per = (scrollTop - other[i]) / (other[i + 1] - other[i]);
-                        if(per){
-                            var offsetY = (another[i + 1] - another[i]) * per + another[i];
-                            scrollTo(false, offsetY);
-                        }
-                    }
-                };
+            if (this.on_target) {
+                this.props.onScroll(preview.scrollTop);
             }
         });
 
         setInterval(() => {
-            self.props.onRender(self.update());
+            this.props.onRender(this.update());
         }, 3000);
 
     },

@@ -11,12 +11,6 @@ const newSec = (id, content) => {
 
 export default React.createClass({
 
-    propTypes: {
-        scrollTo: PropTypes.func.isRequired,
-        preview_offsetY: PropTypes.array.isRequired,
-        tokens_level1_offsetY: PropTypes.array.isRequired
-    },
-
     getInitialState: () => {
         return {
             sections: [newSec(0, '# 欢迎使用 Markdown 编辑阅读器\n')],
@@ -24,10 +18,8 @@ export default React.createClass({
         };
     },
 
-    setScrollTop: function (y) {
-        if (!self.on_target) {
-            this.refs.edit.scrollTop = y;
-        }
+    scrollTo: function (scrollTop) {
+        this.refs.edit.scrollTop = scrollTop;
     },
 
     insert_section: function () {
@@ -41,24 +33,11 @@ export default React.createClass({
     },
 
     componentDidMount: function () {
-        let self = this,
-            edit = self.refs.edit;
+        let edit = this.refs.edit;
 
         edit.addEventListener('scroll', () => {
-            if (self.on_target) {
-                var { scrollTo, preview_offsetY, tokens_level1_offsetY } = self.props,
-                    other = tokens_level1_offsetY,
-                    another = preview_offsetY,
-                    scrollTop = self.refs.edit.scrollTop;
-                for (let i = 0; i < other.length - 1; i++) {
-                    if(scrollTop > other[i] && scrollTop < other[i + 1]){
-                        var per = (scrollTop - other[i]) / (other[i + 1] - other[i]);
-                        if(per){
-                            var offsetY = (another[i + 1] - another[i]) * per + another[i];
-                            scrollTo(true, offsetY);
-                        }
-                    }
-                };
+            if (this.on_target) {
+                this.props.onScroll(edit.scrollTop);
             }
         });
 

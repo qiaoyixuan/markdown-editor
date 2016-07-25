@@ -59,6 +59,7 @@ export default class ReactAce extends Component {
         this.editor.on('paste', this.onPaste);
         this.editor.on('change', this.onChange);
         this.editor.gotoLine(1);
+        this.editor.container.style.lineHeight = 1.6;
 
         if (keyboardHandler) {
             this.editor.setKeyboardHandler('ace/keyboard/' + keyboardHandler);
@@ -110,7 +111,6 @@ export default class ReactAce extends Component {
             this.editor.setValue(nextProps.value, nextProps.cursorStart);
             this.silent = false;
         }
-        this.editor.container.style.lineHeight = 1.6;
     }
 
     componentWillUnmount() {
