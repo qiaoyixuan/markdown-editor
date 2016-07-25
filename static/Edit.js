@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
 import ReactDom from 'react-dom';
-// import Section from './Section';
 import AceEditor from './ace';
 import * as x from 'kit-utils';
 import $ from 'jquery'
@@ -21,7 +20,7 @@ export default React.createClass({
     },
 
     componentDidMount: function () {
-        let edit = this.refs.edit;
+        var edit = this.refs.edit;
 
         edit.addEventListener('scroll', () => {
             if (this.on_target) {
@@ -30,7 +29,7 @@ export default React.createClass({
         });
 
         this.emitChange();
-        let timer = setInterval(() => {
+        setInterval(() => {
             this.emitChange({});
         }, 3000);
     },
@@ -47,7 +46,7 @@ export default React.createClass({
             divs_offsetY, cur_offset = 0;
 
         divs_offsetY = x.reduce((cur, next) => {
-            cur_offset += $(next).height();
+            cur_offset += $(next).outerHeight(true);
             cur.push(cur_offset);
             return cur;
         }, [0], children);

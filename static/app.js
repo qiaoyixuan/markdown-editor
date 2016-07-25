@@ -102,4 +102,4 @@ var Editor = React.createClass({
     }
 });
 
-ReactDOM.render(<Editor />, document.getElementById('editer'));
+ReactDOM.render(<Editor />, document.getElementById('md_editor_app'));
