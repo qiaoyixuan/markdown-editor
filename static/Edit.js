@@ -1,35 +1,23 @@
 import React, { PropTypes } from 'react';
-import Section from './Section';
+import ReactDom from 'react-dom';
+// import Section from './Section';
+import AceEditor from './ace';
+import * as x from 'kit-utils';
+import $ from 'jquery'
 
-const newSec = (id, content) => {
-    return {
-        id: id,
-        content: content,
-        divs_h_list: []
-    };
-}
+import 'brace/mode/markdown';
+import 'brace/theme/dawn';
 
 export default React.createClass({
 
     getInitialState: () => {
         return {
-            sections: [newSec(0, '# 欢迎使用 Markdown 编辑阅读器\n')],
-            section_num: 0
+            content: '# 欢迎使用 Markdown 编辑阅读器\n\n\n\n'
         };
     },
 
     scrollTo: function (scrollTop) {
         this.refs.edit.scrollTop = scrollTop;
-    },
-
-    insert_section: function () {
-        let { section_num, sections } = this.state;
-        section_num ++;
-        sections.push(newSec(section_num, '新区块\n'));
-        this.setState({
-            section_num,
-            sections
-        });
     },
 
     componentDidMount: function () {
@@ -41,54 +29,52 @@ export default React.createClass({
             }
         });
 
+        this.emitChange();
+        let timer = setInterval(() => {
+            this.emitChange({});
+        }, 3000);
     },
 
-    onUpdate: function (section) {
-        let { sections } = this.state,
-            all_content  = '',
-            divs_offsetY = [];
+    onInput: function (content) {
+        this.setState({ content });
+        this.emitChange();
+    },
 
-        for (var i = 0; i < sections.length; i++) {
-            if( sections[i].id == section.id ) {
-                sections[i].content = section.content;
-                sections[i].divs_h_list = section.divs_h_list;
-            }
-        }
+    emitChange: function () {
+        let editor = ReactDom.findDOMNode(this.refs.__ace__),
+            children = $(editor).find('.ace_line_group'),
+            {content, divs_h_list} = this.state,
+            divs_offsetY, cur_offset = 0;
 
-        for (var i = 0, cur_offset = 0; i < sections.length; i++) {
-            all_content += sections[i].content;
-            for (var j = 0; j < sections[i].divs_h_list.length; j++) {
-                divs_offsetY.push(cur_offset);
-                cur_offset += sections[i].divs_h_list[j];
-            }
-        }
+        divs_offsetY = x.reduce((cur, next) => {
+            cur_offset += $(next).height();
+            cur.push(cur_offset);
+            return cur;
+        }, [0], children);
 
-        this.setState({
-            sections,
-            divs_offsetY,
-            all_content
-        });
-
-        this.props.onChange(all_content, divs_offsetY);
+        this.props.onChange(content, divs_offsetY);
     },
 
     render: function () {
-        let self = this,
-            { sections } = this.state,
-            onMouseOver, onMouseOut, onFocus, onBlur, obj;
+        let onMouseOver, onMouseOut, onFocus, onBlur, obj, config;
 
-        onMouseOver = onFocus = () => self.on_target = true;
-        onMouseOut  = onBlur  = () => self.on_target = false;
+        onMouseOver = onFocus = () => this.on_target = true;
+        onMouseOut  = onBlur  = () => this.on_target = false;
 
         obj = {onMouseOver, onMouseOut, onBlur, onFocus};
 
-        return (<div className='edit' ref='edit' {...obj}>
-                    {sections.map((section, i) => {
-                        return (<Section
-                                    key={i}
-                                    section={section}
-                                    onUpdate={self.onUpdate} />);
-                    })}
+        config = {
+            ref: '__ace__',
+            mode: 'markdown',
+            theme: 'dawn',
+            name: 'md_editor',
+            className: 'section ace-dawn',
+            value: this.state.content,
+            onChange: this.onInput
+        };
+
+        return (<div className='edit' ref='edit' {...obj} >
+                    <AceEditor {...config} />
                 </div>);
     }
 });

@@ -79,16 +79,12 @@ var Editor = React.createClass({
                 self.setState({
                     preview_offsetY
                 });
-            },
-
-            newSection = () => {
-                self.refs.__edit__.insert_section();
             };
 
         return (<div className='editor'>
                     <div className='options'>
                         <ul className='opt-btns'>
-                            <li><i className='fa fa-asterisk' onClick={newSection}></i></li>
+                            <li><i className='fa fa-asterisk'></i></li>
                         </ul>
                     </div>
                     <div className='editor-warpper'>
