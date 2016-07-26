@@ -1,15 +1,17 @@
 import React, { PropTypes } from 'react';
 import ReactDom from 'react-dom';
 import ReactModal from 'react-modal';
-import AceEditor from './ace';
+
 import * as x from 'kit-utils';
-import _ from 'lodash';
-import {getRelativePosition, expendObject} from './utils';
 import $ from 'jquery';
+import _ from 'lodash';
+import {MODAL, MODAL_STYLE} from './constant';
+import {getRelativePosition, expendObject} from './utils';
+
+import AceEditor   from './ace';
 import UploadPhoto from './upload_photo';
 import InsertLink  from './insert_link';
 import ContextMenu from './contextMenu';
-import {MODAL, MODAL_STYLE} from './constant';
 
 import 'brace/mode/markdown';
 import 'brace/theme/dawn';
