@@ -30,20 +30,20 @@ export default React.createClass({
                 value: input,
                 className: "form-control",
                 onChange: (e) => this.handleChange(this, 'input', e),
-                placeholder: "http://example.com/images/diagram.jpg 标题"
+                placeholder: "http://example.com/somewhere 标题"
             };
 
         return (<div>
                     <ModalInner>
-                        <div>插入图片</div>
+                        <div>插入链接</div>
                         <div>
                             <div className="form-group photo-modal-inner">
-                                <label>图片地址</label>
+                                <label>链接地址</label>
                                 <input {...config} />
                             </div>
                             <button className="btn btn-primary pull-right mr30" onClick={() => {
-                                this.props.onInsert(`\n![${title}](${address})\n`);
-                                this.props.closeModal(MODAL.PHOTO);
+                                this.props.onInsert(`[${title}](${address})`);
+                                this.props.closeModal(MODAL.LINK);
                             }}>确定</button>
                         </div>
                     </ModalInner>

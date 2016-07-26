@@ -25,7 +25,6 @@ export const MODAL_STYLE = {
     overlay: {
         animationName: 'modal-bg-animation',
         animationDuration: '.25s',
-        animationFillMode: 'forwards',
-        backgroundColor: '#000'
+        animationFillMode: 'forwards'
     }
 };

@@ -7,6 +7,7 @@ import _ from 'lodash';
 import {getRelativePosition, expendObject} from './utils';
 import $ from 'jquery';
 import UploadPhoto from './upload_photo';
+import InsertLink  from './insert_link';
 import ContextMenu from './contextMenu';
 import {MODAL, MODAL_STYLE} from './constant';
 
@@ -115,6 +116,11 @@ export default React.createClass({
             this.setState({
                 ['MODAL_' + modal]: true
             });
+        },
+        closeModal = (modal) => {
+            this.setState({
+                ['MODAL_' + modal]: false
+            });
         };
 
         return (<div className='edit' ref='edit' {...obj} >
@@ -123,17 +129,20 @@ export default React.createClass({
                     <ReactModal
                         style={expendObject(MODAL_STYLE, {content: {
                             width: '500px',
-                            height: '300px',
-                            top: '200px'
+                            height: '200px'
                         }})}
                         isOpen={this.state['MODAL_' + MODAL.PHOTO]}
                         onRequestClose={() => this.setState({['MODAL_' + MODAL.PHOTO]: false})} >
-                        <UploadPhoto />
+                        <UploadPhoto onInsert={this.onInsert} closeModal={closeModal} />
                     </ReactModal>
                     <ReactModal
+                        style={expendObject(MODAL_STYLE, {content: {
+                            width: '500px',
+                            height: '200px'
+                        }})}
                         isOpen={this.state['MODAL_' + MODAL.LINK]}
                         onRequestClose={() => this.setState({['MODAL_' + MODAL.LINK]: false})} >
-                        LINK
+                        <InsertLink onInsert={this.onInsert} closeModal={closeModal} />
                     </ReactModal>
                 </div>);
     }
