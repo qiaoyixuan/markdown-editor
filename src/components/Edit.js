@@ -6,7 +6,7 @@ import * as x from 'kit-utils';
 import _ from 'lodash';
 import {getRelativePosition, expendObject} from './utils';
 import $ from 'jquery';
-import ModalInner from './modal';
+import UploadPhoto from './upload_photo';
 import ContextMenu from './contextMenu';
 import {MODAL, MODAL_STYLE} from './constant';
 
@@ -128,12 +128,7 @@ export default React.createClass({
                         }})}
                         isOpen={this.state['MODAL_' + MODAL.PHOTO]}
                         onRequestClose={() => this.setState({['MODAL_' + MODAL.PHOTO]: false})} >
-                        <ModalInner>
-                            <div>PHOTO</div>
-                            <div>
-                                <input type="text" placeholder="http://example.com/images/diagram.jpg '可选标题'" />
-                            </div>
-                        </ModalInner>
+                        <UploadPhoto />
                     </ReactModal>
                     <ReactModal
                         isOpen={this.state['MODAL_' + MODAL.LINK]}

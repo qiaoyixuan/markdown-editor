@@ -10,7 +10,7 @@ module.exports = {
         ]
     },
     output: {
-        path: path.join(__dirname, 'staic'),
+        path: path.join(__dirname),
         filename: "bundle.js"
     },
     module: {

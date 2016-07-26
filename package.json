@@ -41,7 +41,6 @@
   },
   "dependencies": {
     "brace": "^0.7.0",
-    "guide-markdown": "git+ssh://git@github.com/qiaoyixuan/markdown2html.git",
     "jquery": "^3.1.0",
     "kit-markdown": "git+ssh://git@github.com/qiaoyixuan/markdown2html.git",
     "kit-utils": "git+ssh://git@github.com:qiaoyixuan/utils.git",

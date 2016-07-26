@@ -5,7 +5,7 @@ import isString from 'lodash/isString';
 import Edit from './Edit';
 import View from './View';
 
-require('../css/editor.less')
+require('../static/editor.less')
 
 var md          = require('kit-markdown')(),
     mdContainer = require('markdown-it-container');
