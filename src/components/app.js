@@ -18,15 +18,22 @@ const D = {
     RIGHT: 'RIGHT'
 };
 
+const getValidText = (text, string) => {
+    if(text === undefined || text === '') {
+        return string;
+    }
+    return text;
+};
+
 const TAGS = [
-    ['fa fa-bold', '加粗', function (text) { this.insertTag(`**${text === '' ? '粗体' : text}**`); }],
-    ['fa fa-italic', '斜体', function (text) { this.insertTag(`*${text === '' ? '斜体' : text}*`); }],
+    ['fa fa-bold', '加粗', function (text) { this.insertTag(`**${getValidText(text, '粗体')}**`); }],
+    ['fa fa-italic', '斜体', function (text) { this.insertTag(`*${getValidText(text, '斜体')}*`); }],
     ['fa fa-link', '链接', function () { this.refs.__edit__.openModal(MODAL.LINK); }],
     ['fa fa-quote-left', '引用', '\n> 段落引用\n'],
     ['fa fa-code', '代码', '\n```javascript\nconsole.log(\'Hello World\');\n```\n'],
     ['fa fa-photo', '图片', function () { this.refs.__edit__.openModal(MODAL.PHOTO); }],
     ['fa fa-list-ul', '列表项', '\n- 列表项\n'],
-    ['fa fa-list-alt', '标题', '\n## 标题 ##\n'],
+    ['fa fa-list-alt', '标题', function (text) { this.insertTag(`## ${getValidText(text, '标题')}`); }],
     ['fa fa-minus', '分割线', '\n----------\n']
 ];
 
