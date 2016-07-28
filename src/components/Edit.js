@@ -38,6 +38,14 @@ export default React.createClass({
         this.refs.__ace__.onInsert(text);
     },
 
+    getContent: function () {
+        return this.state.content;
+    },
+
+    getSelectedText: function () {
+        return this.refs.__ace__.getSelectedText();
+    },
+
     componentDidMount: function () {
         var edit = this.refs.edit;
 
@@ -56,6 +64,18 @@ export default React.createClass({
     onInput: function (content) {
         this.setState({ content });
         this.emitChange();
+    },
+
+    openModal: function (modal) {
+        this.setState({
+            ['MODAL_' + modal]: true
+        });
+    },
+
+    closeModal: function (modal) {
+        this.setState({
+            ['MODAL_' + modal]: false
+        });
     },
 
     emitChange: function () {
@@ -114,20 +134,9 @@ export default React.createClass({
             onChange: this.onInput
         };
 
-        let openModal = (modal) => {
-            this.setState({
-                ['MODAL_' + modal]: true
-            });
-        },
-        closeModal = (modal) => {
-            this.setState({
-                ['MODAL_' + modal]: false
-            });
-        };
-
         return (<div className='edit' ref='edit' {...obj} >
                     <AceEditor {...config} />
-                    <ContextMenu style={contextMenuPosition} openModal={openModal} />
+                    <ContextMenu style={contextMenuPosition} openModal={this.openModal} />
                     <ReactModal
                         style={expendObject(MODAL_STYLE, {content: {
                             width: '500px',
@@ -135,7 +144,7 @@ export default React.createClass({
                         }})}
                         isOpen={this.state['MODAL_' + MODAL.PHOTO]}
                         onRequestClose={() => this.setState({['MODAL_' + MODAL.PHOTO]: false})} >
-                        <UploadPhoto onInsert={this.onInsert} closeModal={closeModal} />
+                        <UploadPhoto onInsert={this.onInsert} closeModal={this.closeModal} />
                     </ReactModal>
                     <ReactModal
                         style={expendObject(MODAL_STYLE, {content: {
@@ -144,7 +153,7 @@ export default React.createClass({
                         }})}
                         isOpen={this.state['MODAL_' + MODAL.LINK]}
                         onRequestClose={() => this.setState({['MODAL_' + MODAL.LINK]: false})} >
-                        <InsertLink onInsert={this.onInsert} closeModal={closeModal} />
+                        <InsertLink onInsert={this.onInsert} closeModal={this.closeModal} />
                     </ReactModal>
                 </div>);
     }

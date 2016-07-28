@@ -1,4 +1,7 @@
+var path = require('path');
 require('./animation.less');
+
+export const OUTPUT_PATH = path.join(__dirname, 'output');
 
 export const MODAL = {
     PHOTO: 'PHOTO',

@@ -154,6 +154,10 @@ export default class ReactAce extends Component {
         this.editor.insert(text);
     }
 
+    getSelectedText() {
+        return this.editor.getSession().getTextRange();
+    }
+
     render() {
         const {name, className, width, height} = this.props;
         const divStyle = {
