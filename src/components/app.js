@@ -19,22 +19,41 @@ const D = {
 };
 
 const getValidText = (text, string) => {
-    if(text === undefined || text === '') {
-        return string;
-    }
-    return text;
+    return text === undefined || text === '' ? string : text;
 };
 
 const TAGS = [
-    ['fa fa-bold', '加粗', function (text) { this.insertTag(`**${getValidText(text, '粗体')}**`); }],
-    ['fa fa-italic', '斜体', function (text) { this.insertTag(`*${getValidText(text, '斜体')}*`); }],
-    ['fa fa-link', '链接', function () { this.refs.__edit__.openModal(MODAL.LINK); }],
+    ['fa fa-bold', '加粗', function (text) {
+        const reg = /\*{2}(.+)\*{2}/;
+        let insertText = reg.test(text) ? text.match(reg)[1] : `**${getValidText(text, '粗体')}**`;
+        this.insertTag(insertText);
+    }],
+    ['fa fa-italic', '斜体', function (text) {
+        const reg = /\*{1}(.+)\*{1}/;
+        let insertText = reg.test(text) ? text.match(reg)[1] : `*${getValidText(text, '斜体')}*`;
+        this.insertTag(insertText);
+    }],
+    ['fa fa-link', '链接', function () {
+        this.refs.__edit__.openModal(MODAL.LINK);
+    }],
     ['fa fa-quote-left', '引用', '\n> 段落引用\n'],
     ['fa fa-code', '代码', '\n```javascript\nconsole.log(\'Hello World\');\n```\n'],
-    ['fa fa-photo', '图片', function () { this.refs.__edit__.openModal(MODAL.PHOTO); }],
+    ['fa fa-photo', '图片', function () {
+        this.refs.__edit__.openModal(MODAL.PHOTO);
+    }],
     ['fa fa-list-ul', '列表项', '\n- 列表项\n'],
-    ['fa fa-list-alt', '标题', function (text) { this.insertTag(`## ${getValidText(text, '标题')}`); }],
-    ['fa fa-minus', '分割线', '\n----------\n']
+    ['fa fa-list-alt', '标题', function (text) {
+        const reg = /#{2}\s*(.+)/;
+        let insertText = reg.test(text) ? text.match(reg)[1] : `## ${getValidText(text, '标题')}`;
+        this.insertTag(insertText);
+    }],
+    ['fa fa-minus', '分割线', '\n----------\n'],
+    ['fa fa-reply', '撤销', function () {
+        this.undo();
+    }],
+    ['fa fa-share', '重复', function () {
+        this.redo();
+    }]
 ];
 
 var Editor = React.createClass({
@@ -49,6 +68,14 @@ var Editor = React.createClass({
 
     insertTag: function (text) {
         this.refs.__edit__.onInsert(text);
+    },
+
+    redo: function () {
+        this.refs.__edit__.redo();
+    },
+
+    undo: function () {
+        this.refs.__edit__.undo();
     },
 
     render: function () {
@@ -114,7 +141,7 @@ var Editor = React.createClass({
                 // var content = this.refs.__edit__.getContent();
                 // var file_path = OUTPUT_PATH + '/' + file_name;
                 // console.log(file_path, content);
-                // console.log(this.refs.__edit__.getSelectedText());
+                // this.refs.__edit__.redo();
             },
 
             renderTags = () => {

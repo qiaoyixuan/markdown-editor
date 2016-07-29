@@ -158,6 +158,14 @@ export default class ReactAce extends Component {
         return this.editor.getSession().getTextRange();
     }
 
+    redo() {
+        this.editor.redo();
+    }
+
+    undo() {
+        this.editor.undo();
+    }
+
     render() {
         const {name, className, width, height} = this.props;
         const divStyle = {

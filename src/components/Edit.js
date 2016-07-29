@@ -46,19 +46,12 @@ export default React.createClass({
         return this.refs.__ace__.getSelectedText();
     },
 
-    componentDidMount: function () {
-        var edit = this.refs.edit;
+    redo: function () {
+        this.refs.__ace__.redo();
+    },
 
-        edit.addEventListener('scroll', () => {
-            if (this.on_target) {
-                this.props.onScroll(edit.scrollTop);
-            }
-        });
-
-        this.emitChange();
-        setInterval(() => {
-            this.emitChange({});
-        }, 3000);
+    undo: function () {
+        this.refs.__ace__.undo();
     },
 
     onInput: function (content) {
@@ -76,6 +69,21 @@ export default React.createClass({
         this.setState({
             ['MODAL_' + modal]: false
         });
+    },
+
+    componentDidMount: function () {
+        var edit = this.refs.edit;
+
+        edit.addEventListener('scroll', () => {
+            if (this.on_target) {
+                this.props.onScroll(edit.scrollTop);
+            }
+        });
+
+        this.emitChange();
+        setInterval(() => {
+            this.emitChange({});
+        }, 3000);
     },
 
     emitChange: function () {
