@@ -166,6 +166,10 @@ export default class ReactAce extends Component {
         this.editor.undo();
     }
 
+    selectAll() {
+        this.editor.selectAll();
+    }
+
     render() {
         const {name, className, width, height} = this.props;
         const divStyle = {

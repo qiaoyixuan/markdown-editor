@@ -20,7 +20,7 @@ export default React.createClass({
 
     getInitialState: () => {
         return {
-            content: '# 欢迎使用 Markdown 编辑阅读器\n\n\n\n',
+            content: '# 欢迎使用 Markdown 编辑阅读器',
             contextMenuPosition: {
                 top: 0,
                 left: 0
@@ -52,6 +52,10 @@ export default React.createClass({
 
     undo: function () {
         this.refs.__ace__.undo();
+    },
+
+    selectAll: function () {
+        this.refs.__ace__.selectAll();
     },
 
     onInput: function (content) {
@@ -102,7 +106,7 @@ export default React.createClass({
     },
 
     render: function () {
-        let onMouseOver, onMouseOut, onFocus, onBlur, onClick, onContextMenu, obj, config,
+        let onMouseOver, onMouseOut, onFocus, onBlur, onClick, onContextMenu, obj, ace_config, context_menu_config,
             {contextMenuPosition} = this.state;
 
         onMouseOver = onFocus = () => this.on_target = true;
@@ -132,19 +136,26 @@ export default React.createClass({
 
         obj = {onMouseOver, onMouseOut, onBlur, onFocus, onClick, onContextMenu};
 
-        config = {
+        ace_config = {
             ref: '__ace__',
             mode: 'markdown',
             theme: 'dawn',
             name: 'md_editor',
             className: 'section ace-dawn',
             value: this.state.content,
-            onChange: this.onInput
+            onChange: this.onInput,
+            showPrintMargin: false,
+            // showGutter: true
+        },
+
+        context_menu_config = {
+            selectAll: this.selectAll,
+            openModal: this.openModal
         };
 
         return (<div className='edit' ref='edit' {...obj} >
-                    <AceEditor {...config} />
-                    <ContextMenu style={contextMenuPosition} openModal={this.openModal} />
+                    <AceEditor {...ace_config} />
+                    <ContextMenu style={contextMenuPosition} {...context_menu_config} />
                     <ReactModal
                         style={expendObject(MODAL_STYLE, {content: {
                             width: '500px',
